@@ -85,7 +85,7 @@ test("premise: the dashboard's chat-scoped PATCH stores hiddenModalities.chat, n
   // The premise is about what is STORED, so read the persisted row directly: since
   // #15900 the GET projection decorates every override with a derived
   // `isHidden: isHiddenForModality(override, "chat")` for legacy dashboard clients.
-  const [stored] = getModelCompatOverrides(PROVIDER) as OverrideRow[];
+  const [stored] = getModelCompatOverrides(PROVIDER);
   assert.ok(stored, "the chat-scoped hide must persist an override row");
   assert.equal(stored.hiddenModalities?.chat, true);
   assert.equal(
@@ -96,8 +96,9 @@ test("premise: the dashboard's chat-scoped PATCH stores hiddenModalities.chat, n
 
   // ...while the GET projection reports the derived chat-scope visibility (#15900).
   const [projected] = await readOverrides();
-  assert.equal(projected?.hiddenModalities?.chat, true);
-  assert.equal(projected?.isHidden, true);
+  assert.ok(projected, "the dashboard response must include the stored override");
+  assert.equal(projected.hiddenModalities?.chat, true);
+  assert.equal(projected.isHidden, true, "the dashboard response projects chat-scoped visibility");
 });
 
 test("the dashboard reader reports a model hidden through the chat-scoped toggle", async () => {
