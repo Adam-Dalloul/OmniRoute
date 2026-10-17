@@ -1,5 +1,5 @@
 import React from "react";
-import { createRoot, type Root } from "react-dom/client";
+import { createReactRootRegistry } from "../../../../../../../tests/_helpers/reactRootRegistry";
 import { act } from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import ProviderCard from "../ProviderCard";
@@ -10,24 +10,18 @@ vi.mock("@/shared/components/ProviderIcon", () => ({ default: () => null }));
 vi.mock("next/navigation", () => ({ useRouter: () => ({ push: () => {} }) }));
 
 describe("ProviderCard — #6936 audio-transcriptions provider badge", () => {
+  const roots = createReactRootRegistry();
   let container: HTMLDivElement | null = null;
-  let root: Root | null = null;
 
   afterEach(async () => {
-    await act(async () => {
-      root?.unmount();
-    });
-    root = null;
-    if (container) {
-      document.body.removeChild(container);
-      container = null;
-    }
+    await roots.cleanup();
+    container = null;
   });
 
   it("does NOT label an audio-transcriptions compatible node as Chat", () => {
     container = document.createElement("div");
     document.body.appendChild(container);
-    root = createRoot(container);
+    const root = roots.createRoot(container);
     act(() => {
       root.render(
         <ProviderCard
@@ -52,7 +46,7 @@ describe("ProviderCard — #6936 audio-transcriptions provider badge", () => {
   it("labels an audio-speech compatible node as TTS", () => {
     container = document.createElement("div");
     document.body.appendChild(container);
-    root = createRoot(container);
+    const root = roots.createRoot(container);
     act(() => {
       root.render(
         <ProviderCard
@@ -77,7 +71,7 @@ describe("ProviderCard — #6936 audio-transcriptions provider badge", () => {
   it("still labels a plain chat compatible node as Chat", () => {
     container = document.createElement("div");
     document.body.appendChild(container);
-    root = createRoot(container);
+    const root = roots.createRoot(container);
     act(() => {
       root.render(
         <ProviderCard
