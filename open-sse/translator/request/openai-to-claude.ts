@@ -61,6 +61,7 @@ function applyCopilotSummarizedThinkingDisplay(
 export { fitThinkingToMaxTokens } from "./openai-to-claude/thinkingBudget.ts";
 
 type ClaudeContentBlock = Record<string, unknown>;
+type ClaudeTranslatorCredentials = Record<string, unknown> & { _provider?: string | null };
 type ClaudeMessage = {
   role: string;
   content: ClaudeContentBlock[];
@@ -138,7 +139,7 @@ export function openaiToClaudeRequest(
   model,
   body,
   stream,
-  credentials: { _provider?: string; [key: string]: unknown } | null = null
+  credentials: ClaudeTranslatorCredentials | null = null
 ) {
   // Check if tool prefix should be disabled (configured per-provider or global)
   const disableToolPrefix = body?._disableToolPrefix === true;
