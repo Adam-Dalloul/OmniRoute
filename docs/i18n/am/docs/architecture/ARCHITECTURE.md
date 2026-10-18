@@ -10,77 +10,77 @@ _መጨረሻ የተዘመነው: 2026-06-28_
 
 ## አስፈጻሚ ማጠቃለያ
 
-OmniRoute በNext.js ላይ የተገነባ አካባቢያዊ AI ማስተላለፊያ ጌትዌይ እና ዳሽቦርድ ነው።
-አንድ OpenAI-ተኳሃኝ መዳረሻ (`/v1/*`) ያቀርባል፤ ትራፊክንም በቅርጸት ለውጥ፣ በአማራጭ መተካት፣ በቶከን ማደስ እና በአጠቃቀም ክትትል አማካኝነት በበርካታ የላይኛው ደረጃ አቅራቢዎች መካከል ያስተላልፋል።
+OmniRoute በNext.js ላይ የተገነባ የአካባቢ AI ማስተላለፊያ ጌትዌይ እና ዳሽቦርድ ነው።
+አንድ ከOpenAI ጋር ተኳሃኝ የሆነ መገናኛ (`/v1/*`) ያቀርባል፤ እንዲሁም ትርጉምን፣ አማራጭ መመለሻን፣ የቶከን እድሳትን እና የአጠቃቀም ክትትልን በመጠቀም ትራፊክን በበርካታ የላይኛው ደረጃ አቅራቢዎች መካከል ያስተላልፋል።
 
 ዋና ችሎታዎች፦
 
-- ለCLI/መሣሪያዎች OpenAI-ተኳሃኝ API በይነገጽ (374 አቅራቢዎች፣ 150 አስፈጻሚ ሞጁሎች)
-- በአቅራቢ ቅርጸቶች መካከል የጥያቄ/ምላሽ ቅርጸት ለውጥ
-- የሞዴል ጥምረት አማራጭ መተካት (ባለብዙ-ሞዴል ቅደም ተከተል)
-- የተዋቀሩ የጥምረት ደረጃዎች (`provider + model + connection`)፣ በ`compositeTiers` መሠረት በሩጫ ጊዜ የሚደረግ ቅደም ተከተል
-- በመለያ ደረጃ አማራጭ መተካት (ለእያንዳንዱ አቅራቢ በርካታ መለያዎች)
-- በዋናው የውይይት መንገድ ውስጥ የኮታ ቅድመ-ምርመራ እና ኮታን ከግምት ያስገባ የP2C መለያ ምርጫ
-- የOAuth + API-key አቅራቢ ግንኙነት አስተዳደር (27 OAuth አቅራቢ ሞጁሎች)
-- በ`/v1/embeddings` በኩል የኤምቤዲንግ ማመንጨት (18 አቅራቢዎች)
-- በ`/v1/images/generations` በኩል የምስል ማመንጨት (10+ አቅራቢዎች፣ 20+ ሞዴሎች)
-- በ`/v1/audio/transcriptions` በኩል የድምፅ ወደ ጽሑፍ ቅጂ ማዘጋጀት (18 አቅራቢዎች)
-- በ`/v1/audio/speech` በኩል ጽሑፍን ወደ ንግግር መቀየር (24 አብሮገነብ አቅራቢዎች)
-- በ`/v1/videos/generations` በኩል የቪዲዮ ማመንጨት (ComfyUI + SD WebUI)
-- በ`/v1/music/generations` በኩል የሙዚቃ ማመንጨት (ComfyUI)
+- ለCLI/መሣሪያዎች ከOpenAI ጋር ተኳሃኝ የሆነ API በይነገጽ (374 አቅራቢዎች፣ 150 አስፈጻሚ ሞጁሎች)
+- በአቅራቢዎች ቅርጸቶች መካከል የጥያቄ/ምላሽ ትርጉም
+- የሞዴል ጥምረት አማራጭ መመለሻ (ባለብዙ-ሞዴል ቅደም ተከተል)
+- የተዋቀሩ የጥምረት ደረጃዎች (`provider + model + connection`)፣ በ`compositeTiers` የአሂድ ጊዜ ቅደም ተከተል
+- በመለያ ደረጃ አማራጭ መመለሻ (ለእያንዳንዱ አቅራቢ በርካታ መለያዎች)
+- በዋናው የውይይት መንገድ ውስጥ የኮታ ቅድመ-ምርመራ እና ኮታን ያገናዘበ የP2C መለያ ምርጫ
+- የOAuth + API-key አቅራቢ ግንኙነት አስተዳደር (27 የOAuth አቅራቢ ሞጁሎች)
+- በ`/v1/embeddings` በኩል የኢምቤዲንግ ማመንጨት (18 አቅራቢዎች)
+- በ`/v1/images/generations` በኩል ምስል ማመንጨት (10+ አቅራቢዎች፣ 20+ ሞዴሎች)
+- በ`/v1/audio/transcriptions` በኩል የድምፅ ጽሑፍ ቅጂ ማዘጋጀት (18 አቅራቢዎች)
+- በ`/v1/audio/speech` በኩል ጽሑፍን ወደ ንግግር መቀየር (24 አብረው የተካተቱ አቅራቢዎች)
+- በ`/v1/videos/generations` በኩል ቪዲዮ ማመንጨት (ComfyUI + SD WebUI)
+- በ`/v1/music/generations` በኩል ሙዚቃ ማመንጨት (ComfyUI)
 - በ`/v1/search` በኩል የድር ፍለጋ (20 አቅራቢዎች)
 - በ`/v1/moderations` በኩል የይዘት ቁጥጥር
 - በ`/v1/rerank` በኩል ዳግም ደረጃ መስጠት
-- ለማመዛዘኛ ሞዴሎች የThink መለያ መተንተን (``)
-- ከጥብቅ የOpenAI SDK ተኳሃኝነት ጋር እንዲስማማ ምላሽን ማጽዳት
-- ለአቅራቢዎች መካከል ተኳሃኝነት የሚደረግ የሚና መደበኛነት (developer→system፣ system→user)
-- የተዋቀረ ውጤት ልወጣ (json_schema → Gemini responseSchema)
-- ለአቅራቢዎች፣ ቁልፎች፣ ተለዋጭ ስሞች፣ ጥምረቶች፣ ቅንብሮች እና ዋጋ አሰጣጥ አካባቢያዊ ዘላቂ ማከማቻ (122 DB ሞጁሎች)
-- የአጠቃቀም/ወጪ ክትትል እና የጥያቄ መዝገብ
-- ለብዙ መሣሪያ/ሁኔታ ማመሳሰል አማራጭ የደመና ማመሳሰል
-- ለAPI መዳረሻ ቁጥጥር የIP የተፈቀደላቸው/የታገዱ ዝርዝሮች
-- የማሰብ በጀት አስተዳደር (passthrough/auto/custom/adaptive)
+- ለአመክንዮ ሞዴሎች የThink መለያ መተንተን (``)
+- ጥብቅ የOpenAI SDK ተኳሃኝነትን ለማረጋገጥ ምላሽን ማጽዳት
+- ለአቅራቢ-ተሻጋሪ ተኳሃኝነት የሚና መደበኛነት (developer→system, system→user)
+- የተዋቀረ ውጤት መቀየር (json_schema → Gemini responseSchema)
+- ለአቅራቢዎች፣ ቁልፎች፣ ተለዋጭ ስሞች፣ ጥምረቶች፣ ቅንብሮች እና ዋጋ አሰጣጥ የአካባቢ ውሂብ ማቆየት (122 DB ሞጁሎች)
+- የአጠቃቀም/ወጪ ክትትል እና የጥያቄ ምዝገባ
+- ለባለብዙ-መሣሪያ/ሁኔታ ማመሳሰል አማራጭ የደመና ማመሳሰል
+- ለAPI መዳረሻ ቁጥጥር የIP የተፈቀዱ ዝርዝር/የታገዱ ዝርዝር
+- የአስተሳሰብ በጀት አስተዳደር (passthrough/auto/custom/adaptive)
 - ዓለም አቀፍ የስርዓት መመሪያ ማስገባት
-- የክፍለ ጊዜ ክትትል እና አሻራ ማውጣት
-- ለእያንዳንዱ መለያ በአቅራቢ-ተኮር መገለጫዎች የተሻሻለ የፍጥነት ገደብ
-- ለአቅራቢ ጽናት የሰርኪት ብሬከር ንድፍ
-- በmutex መቆለፍ የሚከናወን የአንድ ጊዜ የብዙ ጥያቄዎች መጉረፍ መከላከያ
-- በፊርማ ላይ የተመሠረተ የተደጋጋሚ ጥያቄ ማስወገጃ መሸጎጫ
-- የዶሜይን ንብርብር፦ የወጪ ደንቦች፣ የአማራጭ መተካት ፖሊሲ፣ የመቆለፍ ፖሊሲ
-- Context Relay፦ በመለያ ሽክርክር ወቅት ቀጣይነትን ለማስጠበቅ የክፍለ ጊዜ ርክክብ ማጠቃለያዎች
-- የዶሜይን ሁኔታ ዘላቂ ማከማቻ (ለአማራጭ መተካቶች፣ በጀቶች፣ መቆለፎች እና ሰርኪት ብሬከሮች SQLite write-through መሸጎጫ)
-- ለማዕከላዊ የጥያቄ ግምገማ የፖሊሲ ሞተር (lockout → budget → fallback)
-- p50/p95/p99 የመዘግየት ድምር ያለው የጥያቄ ቴሌሜትሪ
-- የጥምረት ዒላማ ቴሌሜትሪ እና በ`combo_execution_key` / `combo_step_id` በኩል ታሪካዊ የጥምረት ዒላማ ጤና
-- ከጫፍ እስከ ጫፍ ለሚደረግ ክትትል የግንኙነት መለያ (X-Request-Id)
-- ለእያንዳንዱ API ቁልፍ ከመሳተፍ የመውጣት አማራጭ ያለው የተገዢነት ኦዲት ምዝገባ
+- የክፍለ ጊዜ ክትትል እና የጣት አሻራ ማዘጋጀት
+- በእያንዳንዱ መለያ የተሻሻለ የፍጥነት ገደብ፣ ከአቅራቢ-ተኮር መገለጫዎች ጋር
+- ለአቅራቢዎች ጽናት የወረዳ ቆራጭ ንድፍ
+- በmutex መቆለፍ የብዙ ጥያቄዎች በአንድ ጊዜ መጉረፍን የሚከላከል ጥበቃ
+- በፊርማ ላይ የተመሠረተ የጥያቄ ድግግሞሽ ማስወገጃ መሸጎጫ
+- የጎራ ንብርብር፦ የወጪ ደንቦች፣ የአማራጭ መመለሻ ፖሊሲ፣ የመቆለፍ ፖሊሲ
+- Context Relay፦ በመለያ ማዞር ወቅት ቀጣይነትን ለመጠበቅ የክፍለ ጊዜ ርክክብ ማጠቃለያዎች
+- የጎራ ሁኔታ ማቆየት (ለአማራጭ መመለሻዎች፣ በጀቶች፣ መቆለፊያዎች እና የወረዳ ቆራጮች የSQLite ወዲያውኑ-ጻፍ መሸጎጫ)
+- ለተማከለ የጥያቄ ግምገማ የፖሊሲ ሞተር (መቆለፍ → በጀት → አማራጭ መመለሻ)
+- የጥያቄ ቴሌሜትሪ፣ ከp50/p95/p99 የመዘግየት ድምር ጋር
+- የጥምረት ዒላማ ቴሌሜትሪ እና ታሪካዊ የጥምረት ዒላማ ጤና፣ በ`combo_execution_key` / `combo_step_id`
+- ለከጫፍ-እስከ-ጫፍ ፍለጋ የትስስር ID (X-Request-Id)
+- ለእያንዳንዱ API ቁልፍ የመርጦ-መውጣት አማራጭ ያለው የተገዢነት ኦዲት ምዝገባ
 - ለLLM ጥራት ማረጋገጫ የEval ማዕቀፍ
-- ቅጽበታዊ የአቅራቢ ሰርኪት ብሬከር ሁኔታ ያለው የጤና ዳሽቦርድ
-- MCP Server (110 መሣሪያዎች) ከ3 ማጓጓዣዎች ጋር (stdio/SSE/Streamable HTTP)
-- A2A Server (JSON-RPC 2.0 + SSE) ከክህሎቶች እና የተግባር የሕይወት ዑደት ጋር
+- ቅጽበታዊ የአቅራቢ ወረዳ ቆራጭ ሁኔታ ያለው የጤና ዳሽቦርድ
+- MCP Server (110 መሣሪያዎች)፣ ከ3 ማጓጓዣዎች ጋር (stdio/SSE/Streamable HTTP)
+- A2A Server (JSON-RPC 2.0 + SSE)፣ ከክህሎቶች እና የተግባር የሕይወት ዑደት ጋር
 - የማስታወሻ ስርዓት (ማውጣት፣ ማስገባት፣ ሰርስሮ ማውጣት፣ ማጠቃለል)
-- የክህሎቶች ስርዓት (መዝገብ፣ አስፈጻሚ፣ sandbox፣ አብሮገነብ ክህሎቶች)
-- የምስክር ወረቀት አስተዳደር እና DNS አያያዝ ያለው MITM proxy
-- የመመሪያ ጥቃት መከላከያ middleware
-- Caveman፣ RTK፣ የተደራረቡ የሂደት መስመሮች፣ የማመቅ ጥምረቶች፣ የቋንቋ ጥቅሎች እና ትንታኔዎች ያሉት የመመሪያ ማመቂያ የሂደት መስመር
+- የክህሎቶች ስርዓት (መዝገብ፣ አስፈጻሚ፣ ሳንድቦክስ፣ አብረው የተካተቱ ክህሎቶች)
+- የMITM ፕሮክሲ፣ ከሰርተፍኬት አስተዳደር እና DNS አያያዝ ጋር
+- የመመሪያ ማስገቢያ ጥቃት መከላከያ ሚድልዌር
+- የመመሪያ መጭመቂያ ቧንቧ መስመር፣ ከCaveman፣ RTK፣ የተደራረቡ ቧንቧ መስመሮች፣ የመጭመቂያ ጥምረቶች፣ የቋንቋ ጥቅሎች እና ትንታኔዎች ጋር
 - ACP (Agent Communication Protocol) መዝገብ
-- ሞጁላር OAuth አቅራቢዎች (በ`src/lib/oauth/providers/` ስር 22 የተናጠል ሞጁሎች)
+- ሞጁላር የOAuth አቅራቢዎች (22 የተናጠል ሞጁሎች በ`src/lib/oauth/providers/` ስር)
 - የማራገፊያ/ሙሉ-ማራገፊያ ስክሪፕቶች
 - የOAuth አካባቢ ጥገና እርምጃ
-- ለOpenAI-ተኳሃኝ WS ደንበኞች WebSocket ድልድይ (`/v1/ws`)
-- የማመሳሰያ ቶከን አስተዳደር (መስጠት/መሻር፣ ETag-ስሪት ያለው የውቅር ጥቅል ማውረድ)
+- ከOpenAI ጋር ተኳሃኝ ለሆኑ WS ደንበኞች የWebSocket ድልድይ (`/v1/ws`)
+- የማመሳሰያ ቶከን አስተዳደር (ማውጣት/መሻር፣ በETag ስሪት የተደረገ የውቅር ጥቅል ማውረድ)
 - GLM Thinking (`glmt`) እንደ ዋና ደረጃ አቅራቢ ቅድመ-ቅንብር
-- ድብልቅ የቶከን ቆጠራ (በአቅራቢ በኩል `/messages/count_tokens` ከግምታዊ አማራጭ ጋር)
-- የሞዴል ተለዋጭ ስም ራስ-ሰር መዝራት (ሲጀመር 30+ የፕሮክሲ-አቋራጭ የቅላፄ መደበኛነቶች)
-- ከSSRF መከላከያ፣ ከግል URL እገዳ እና ሊዋቀር ከሚችል ዳግም ሙከራ ጋር ደህንነቱ የተጠበቀ ወደ ውጭ የሚደረግ ሰርስሮ ማምጣት
-- ሊዋቀሩ ከሚችሉ `requestRetry` እና `maxRetryIntervalSec` ጋር የማቀዝቀዣ ጊዜን ከግምት ያስገቡ የውይይት ዳግም ሙከራዎች
-- ሲጀመር በZod የሚደረግ የሩጫ ጊዜ አካባቢ ማረጋገጫ
-- የተገዢነት ኦዲት v2 ከገጽ ክፍፍል፣ ከአቅራቢ CRUD ክስተቶች እና ከSSRF-የታገደ የማረጋገጫ ምዝገባ ጋር
+- የተዳቀለ ቶከን ቆጠራ (በአቅራቢው በኩል `/messages/count_tokens`፣ ከግምት አማራጭ መመለሻ ጋር)
+- የሞዴል ተለዋጭ ስም ራስ-ሰር መጀመሪያ መሙላት (በማስጀመሪያ ጊዜ 30+ የፕሮክሲ-ተሻጋሪ የዘዬ መደበኛነቶች)
+- ደህንነቱ የተጠበቀ ወደ ውጭ የሚደረግ ሰርስሮ ማምጣት፣ ከSSRF ጥበቃ፣ የግል URL እገዳ እና ሊዋቀር ከሚችል ዳግም ሙከራ ጋር
+- የመጠበቂያ ጊዜን ያገናዘበ የውይይት ዳግም ሙከራ፣ ሊዋቀሩ ከሚችሉ `requestRetry` እና `maxRetryIntervalSec` ጋር
+- በማስጀመሪያ ጊዜ በZod የአሂድ ጊዜ አካባቢ ማረጋገጥ
+- የተገዢነት ኦዲት v2፣ ከገጽ ክፍፍል፣ የአቅራቢ CRUD ክስተቶች እና በSSRF የታገደ የማረጋገጫ ምዝገባ ጋር
 
-ዋና የሩጫ ጊዜ ሞዴል፦
+ዋና የአሂድ ጊዜ ሞዴል፦
 
 - በ`src/app/api/*` ስር ያሉ የNext.js መተግበሪያ መንገዶች ሁለቱንም የዳሽቦርድ APIዎች እና የተኳሃኝነት APIዎች ይተገብራሉ
-- በ`src/sse/*` + `open-sse/*` ውስጥ ያለ የጋራ SSE/ማስተላለፊያ ዋና አካል የአቅራቢ አፈጻጸምን፣ የቅርጸት ለውጥን፣ ዥረትን፣ አማራጭ መተካትን እና አጠቃቀምን ያስተናግዳል
+- በ`src/sse/*` + `open-sse/*` ውስጥ ያለው የጋራ SSE/ማስተላለፊያ ኮር የአቅራቢ አፈጻጸምን፣ ትርጉምን፣ ዥረትን፣ አማራጭ መመለሻን እና አጠቃቀምን ያስተናግዳል
 
 ## የማጣቀሻ ንድፎች
 
@@ -258,73 +258,73 @@ flowchart LR
 - የውቅር ጥቅል፦ `src/app/api/sync/bundle` (GET፣ በETag ስሪት የተያዘ የቅንብሮች/አቅራቢዎች/ጥምረቶች/ቁልፎች ቅጽበታዊ ቅጂ)
 - WebSocket፦ `src/app/api/v1/ws/route.ts` — ከOpenAI ጋር ተኳኋኝ ለሆኑ የWS ደንበኞች የUpgrade ተቆጣጣሪ
 
-## 2) SSE + የትርጉም ዋና ክፍል
+## 2) SSE + የትርጉም ኮር
 
-ዋና የሂደት ሞጁሎች፦
+ዋና የፍሰት ሞጁሎች፦
 
 - መግቢያ፦ `src/sse/handlers/chat.ts`
-- ዋና ማቀናበሪያ፦ `open-sse/handlers/chatCore.ts`
-- የአቅራቢ ማስፈጸሚያ አስማሚዎች፦ `open-sse/executors/*`
+- የኮር ማቀናበሪያ፦ `open-sse/handlers/chatCore.ts`
+- የአቅራቢ አፈጻጸም አስማሚዎች፦ `open-sse/executors/*`
 - የቅርጸት ማወቂያ/የአቅራቢ ውቅር፦ `open-sse/services/provider.ts`
-- የሞዴል ትንተና/መፍታት፦ `src/sse/services/model.ts`፣ `open-sse/services/model.ts`
-- የመለያ ምትክ አመክንዮ፦ `open-sse/services/accountFallback.ts`
+- የሞዴል ትንተና/መፍታት፦ `src/sse/services/model.ts`, `open-sse/services/model.ts`
+- የመለያ አማራጭ መቀየሪያ አመክንዮ፦ `open-sse/services/accountFallback.ts`
 - የትርጉም መዝገብ፦ `open-sse/translator/index.ts`
-- የዥረት ለውጦች፦ `open-sse/utils/stream.ts`፣ `open-sse/utils/streamHandler.ts`
-- የአጠቃቀም ማውጣት/ደረጃ ማስተካከል፦ `open-sse/utils/usageTracking.ts`
-- የThink መለያ ትንተና፦ `open-sse/utils/thinkTagParser.ts`
+- የዥረት ለውጦች፦ `open-sse/utils/stream.ts`, `open-sse/utils/streamHandler.ts`
+- የአጠቃቀም ማውጣት/መደበኛ ማድረግ፦ `open-sse/utils/usageTracking.ts`
+- የThink መለያ ተንታኝ፦ `open-sse/utils/thinkTagParser.ts`
 - የEmbedding አስተናጋጅ፦ `open-sse/handlers/embeddings.ts`
 - የEmbedding አቅራቢ መዝገብ፦ `open-sse/config/embeddingRegistry.ts`
 - የምስል ማመንጫ አስተናጋጅ፦ `open-sse/handlers/imageGeneration.ts`
 - የምስል አቅራቢ መዝገብ፦ `open-sse/config/imageRegistry.ts`
 - የምላሽ ማጽዳት፦ `open-sse/handlers/responseSanitizer.ts`
-- የሚና ደረጃ ማስተካከል፦ `open-sse/services/roleNormalizer.ts`
+- የሚና መደበኛ ማድረግ፦ `open-sse/services/roleNormalizer.ts`
 
 አገልግሎቶች (የንግድ አመክንዮ)፦
 
 - የመለያ ምርጫ/ውጤት አሰጣጥ፦ `open-sse/services/accountSelector.ts`
-- የዐውድ የሕይወት ዑደት አስተዳደር፦ `open-sse/services/contextManager.ts`
-- የIP ማጣሪያ ማስፈጸም፦ `open-sse/services/ipFilter.ts`
-- የክፍለ ጊዜ ክትትል፦ `open-sse/services/sessionManager.ts`
-- የጥያቄ ብዜት ማስወገድ፦ `open-sse/services/signatureCache.ts`
+- የአውድ የሕይወት ዑደት አስተዳደር፦ `open-sse/services/contextManager.ts`
+- የIP ማጣሪያ ማስፈጸሚያ፦ `open-sse/services/ipFilter.ts`
+- የክፍለ-ጊዜ ክትትል፦ `open-sse/services/sessionManager.ts`
+- የጥያቄ ድግግሞሽ ማስወገድ፦ `open-sse/services/signatureCache.ts`
 - የስርዓት መመሪያ ማስገባት፦ `open-sse/services/systemPrompt.ts`
-- የማሰቢያ በጀት አስተዳደር፦ `open-sse/services/thinkingBudget.ts`
-- የWildcard ሞዴል ማዘዋወር፦ `open-sse/services/wildcardRouter.ts`
-- የፍጥነት ገደብ አስተዳደር፦ `open-sse/services/rateLimitManager.ts`
-- የወረዳ መቆራረጫ፦ `src/shared/utils/circuitBreaker.ts`
-- የዐውድ ርክክብ፦ `open-sse/services/contextHandoff.ts` — ለዐውድ-ማስተላለፊያ ስልት የርክክብ ማጠቃለያ ማመንጨትና ማስገባት
-- መጭመቅ፦ `open-sse/services/compression/*` — ከአቅራቢ ትርጉም በፊት ቀድሞ መጭመቅ፤
-  የCaveman ደንቦችን፣ የRTK ማጣሪያዎችን፣ የተደራረቡ የሂደት መስመሮችን፣ የመጭመቂያ ውህዶችን፣ ስታቲስቲክስን እና ማረጋገጫን ያካትታል
-- የCodex ኮታ ሰብሳቢ፦ `open-sse/services/codexQuotaFetcher.ts` — ለዐውድ-ማስተላለፊያ የርክክብ ውሳኔዎች የCodex ኮታን ያመጣል
-- የማቀዝቀዣ ጊዜን የሚያውቅ ዳግም ሙከራ፦ `src/sse/services/cooldownAwareRetry.ts` — ሊዋቀሩ በሚችሉ `requestRetry` / `maxRetryIntervalSec` አማካኝነት ለእያንዳንዱ ሞዴል የማቀዝቀዣ ጊዜ ዳግም ሙከራዎች
-- ደህንነቱ የተጠበቀ የውጪ fetch፦ `src/shared/network/safeOutboundFetch.ts` — የSSRF መከላከያ፣ የግል-URL እገዳ፣ ዳግም ሙከራ እና የጊዜ ገደብ ያለው የአቅራቢ/ሞዴል fetch
-- የውጪ URL መከላከያ፦ `src/shared/network/outboundUrlGuard.ts` — በአቅራቢ URLዎች ላይ የአስተናጋጅ ማረጋገጫዎች፤ `src/shared/network/outboundUrlGuardPolicy.ts` ሁነታውን ከ`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS`፣ `OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS` እና ከተዛማጅ የዳሽቦርድ መቀያየሪያዎቻቸው ይመርጣል (`docs/reference/ENVIRONMENT.md`ን ይመልከቱ)
-- የአቅራቢ ጥያቄ ነባሪዎች፦ `open-sse/services/providerRequestDefaults.ts` — የአቅራቢ ደረጃ `maxTokens`፣ `temperature`፣ `thinkingBudgetTokens` ነባሪዎች
+- የአስተሳሰብ በጀት አስተዳደር፦ `open-sse/services/thinkingBudget.ts`
+- የWildcard ሞዴል ማስተላለፊያ፦ `open-sse/services/wildcardRouter.ts`
+- የጥያቄ መጠን ገደብ አስተዳደር፦ `open-sse/services/rateLimitManager.ts`
+- የወረዳ ቆራጭ፦ `src/shared/utils/circuitBreaker.ts`
+- የአውድ ርክክብ፦ `open-sse/services/contextHandoff.ts` — ለአውድ-ማስተላለፊያ ስትራቴጂ የርክክብ ማጠቃለያ ማመንጨትና ማስገባት
+- መጭመቅ፦ `open-sse/services/compression/*` — ከአቅራቢ ትርጉም በፊት ቀድሞ የሚከናወን መጭመቅ፤
+  የCaveman ደንቦችን፣ የRTK ማጣሪያዎችን፣ የተደራረቡ ፓይፕላይኖችን፣ የመጭመቂያ ጥምረቶችን፣ ስታቲስቲክስን እና ማረጋገጫን ያካትታል
+- የCodex ኮታ አምጪ፦ `open-sse/services/codexQuotaFetcher.ts` — ለአውድ-ማስተላለፊያ ርክክብ ውሳኔዎች የCodex ኮታን ያመጣል
+- የማቀዝቀዣ ጊዜን የሚያገናዝብ ዳግም ሙከራ፦ `src/sse/services/cooldownAwareRetry.ts` — በሚዋቀሩ `requestRetry` / `maxRetryIntervalSec` አማካኝነት በየሞዴሉ የማቀዝቀዣ ጊዜ ዳግም ሙከራዎች
+- ደህንነቱ የተጠበቀ ወጪ fetch፦ `src/shared/network/safeOutboundFetch.ts` — በSSRF ጥበቃ፣ የግል URL እገዳ፣ ዳግም ሙከራ እና የጊዜ ገደብ የተጠበቀ የአቅራቢ/ሞዴል fetch
+- የወጪ URL ጥበቃ፦ `src/shared/network/outboundUrlGuard.ts` — በአቅራቢ URLዎች ላይ የአስተናጋጅ ፍተሻዎች፤ `src/shared/network/outboundUrlGuardPolicy.ts` ሁነታውን ከ`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS`፣ `OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS` እና ከዳሽቦርድ መቀያየሪያዎቻቸው ይመርጣል (`docs/reference/ENVIRONMENT.md`ን ይመልከቱ)
+- የአቅራቢ ጥያቄ ነባሪዎች፦ `open-sse/services/providerRequestDefaults.ts` — በአቅራቢ ደረጃ ያሉ የ`maxTokens`፣ `temperature`፣ `thinkingBudgetTokens` ነባሪዎች
 - የGLM አቅራቢ ቋሚዎች፦ `open-sse/config/glmProvider.ts` — የጋራ GLM ሞዴሎች፣ የኮታ URLዎች፣ የGLMT የጊዜ ገደብ/ነባሪዎች
-- Antigravity upstream፦ `open-sse/config/antigravityUpstream.ts` — የመሠረት URL እና የማግኛ ዱካ ቋሚዎች
+- የAntigravity የላይኛው ምንጭ፦ `open-sse/config/antigravityUpstream.ts` — የመሠረት URL እና የማግኛ መንገድ ቋሚዎች
 - የCodex ደንበኛ ቋሚዎች፦ `open-sse/config/codexClient.ts` — ስሪት ያላቸው የተጠቃሚ-ወኪል እና የደንበኛ-ስሪት እሴቶች
-- የሞዴል ተለዋጭ ስም መነሻ ውሂብ፦ `src/lib/modelAliasSeed.ts` — በማስጀመሪያ ጊዜ ከ30 በላይ የተለያዩ ፕሮክሲዎችን የሚያገናኙ የቀበሌኛ ተለዋጭ ስሞችን ያስገባል
+- የሞዴል ተለዋጭ ስም መነሻ፦ `src/lib/modelAliasSeed.ts` — ሲጀመር 30+ ተሻጋሪ-ፕሮክሲ ዘዬ ተለዋጭ ስሞችን ይመዘግባል
 
 የጎራ ንብርብር ሞጁሎች፦
 
 - የወጪ ደንቦች/በጀቶች፦ `src/domain/costRules.ts`
-- የምትክ ፖሊሲ፦ `src/domain/fallbackPolicy.ts`
-- የውህድ መፍቻ፦ `src/domain/comboResolver.ts`
+- የአማራጭ መቀየሪያ ፖሊሲ፦ `src/domain/fallbackPolicy.ts`
+- የጥምረት ፈቺ፦ `src/domain/comboResolver.ts`
 - የመቆለፊያ ፖሊሲ፦ `src/domain/lockoutPolicy.ts`
-- የፖሊሲ ሞተር፦ `src/domain/policyEngine.ts` — የተማከለ መቆለፊያ → በጀት → የምትክ ግምገማ
+- የፖሊሲ ሞተር፦ `src/domain/policyEngine.ts` — የተማከለ መቆለፊያ → በጀት → የአማራጭ መቀየሪያ ግምገማ
 - የስህተት ኮዶች ማውጫ፦ `src/shared/constants/errorCodes.ts`
 - የጥያቄ መታወቂያ፦ `src/shared/utils/requestId.ts`
 - የFetch የጊዜ ገደብ፦ `src/shared/utils/fetchTimeout.ts`
 - የጥያቄ ቴሌሜትሪ፦ `src/shared/utils/requestTelemetry.ts`
 - ተገዢነት/ኦዲት፦ `src/lib/compliance/index.ts`
 - የግምገማ አስኪያጅ፦ `src/lib/evals/evalRunner.ts`
-- የጎራ ሁኔታ ማቆያ፦ `src/lib/db/domainState.ts` — ለምትክ ሰንሰለቶች፣ በጀቶች፣ የወጪ ታሪክ፣ የመቆለፊያ ሁኔታ እና የወረዳ መቆራረጫዎች SQLite CRUD
+- የጎራ ሁኔታ ቋሚ ማከማቻ፦ `src/lib/db/domainState.ts` — ለአማራጭ መቀየሪያ ሰንሰለቶች፣ በጀቶች፣ የወጪ ታሪክ፣ የመቆለፊያ ሁኔታ እና የወረዳ ቆራጮች SQLite CRUD
 
-የOAuth አቅራቢ ሞጁሎች (በ`src/lib/oauth/providers/` ስር ያሉ 27 የተናጠል ፋይሎች)፦
+የOAuth አቅራቢ ሞጁሎች (`src/lib/oauth/providers/` ስር 27 የተናጠል ፋይሎች)፦
 
 - የመዝገብ ማውጫ፦ `src/lib/oauth/providers/index.ts`
-- የተናጠል አቅራቢዎች፦ `agy.ts`፣ `antigravity.ts`፣ `claude.ts`፣ `cline.ts`፣ `codebuddy-cn.ts`፣ `codebuddy-intl.ts`፣ `codex.ts`፣ `cursor.ts`፣ `devin-desktop.ts`፣ `ghe-copilot.ts`፣ `github.ts`፣ `gitlab-duo.ts`፣ `grok-cli-oauth.ts`፣ `grok-cli.ts`፣ `kilocode.ts`፣ `kimi-coding.ts`፣ `kiro.ts`፣ `muse-code.ts`፣ `openference.ts`፣ `qoder.ts`፣ `trae.ts`፣ `workbuddy.ts`፣ `xai-oauth.ts`፣ `zed-hosted.ts`፣ `zed.ts`
+- የተናጠል አቅራቢዎች፦ `agy.ts`, `antigravity.ts`, `claude.ts`, `cline.ts`, `codebuddy-cn.ts`, `codebuddy-intl.ts`, `codex.ts`, `cursor.ts`, `devin-desktop.ts`, `ghe-copilot.ts`, `github.ts`, `gitlab-duo.ts`, `grok-cli-oauth.ts`, `grok-cli.ts`, `kilocode.ts`, `kimi-coding.ts`, `kiro.ts`, `muse-code.ts`, `openference.ts`, `qoder.ts`, `trae.ts`, `workbuddy.ts`, `xai-oauth.ts`, `zed-hosted.ts`, `zed.ts`
 - የጋራ ረዳቶች፦ `codebuddyDeviceAuth.ts` (የCodeBuddy CN/intl መሣሪያ ፍሰት)፣ `museCodeDeviceResponse.ts`
-- ቀላል መጠቅለያ፦ `src/lib/oauth/providers.ts` — ከተናጠል ሞጁሎች ዳግም ወደ ውጪ ይልካል
+- ቀጭን መጠቅለያ፦ `src/lib/oauth/providers.ts` — ከተናጠል ሞጁሎች እንደገና ወደ ውጭ ይልካል
 
 ## 5) የተካተቱ አገልግሎቶች (v3.8.4)
 
@@ -535,15 +535,15 @@ model lockout ንብርብሮች ላይ የሚደገፉ ልዩ የመቋቋም �
 
 ## 4) ማረጋገጫ + የደህንነት ገጽታዎች
 
-- የዳሽቦርድ ኩኪ ማረጋገጫ፦ `src/proxy.ts`፣ `src/app/api/auth/login/route.ts`
+- የዳሽቦርድ cookie ማረጋገጫ፦ `src/proxy.ts`፣ `src/app/api/auth/login/route.ts`
 - የAPI ቁልፍ ማመንጨት/ማረጋገጥ፦ `src/shared/utils/apiKey.ts`
-- የአቅራቢዎች ሚስጥሮች በ`providerConnections` ግቤቶች ውስጥ ቋሚ ሆነው ይቀመጣሉ
-- የወጪ ፕሮክሲ ድጋፍ በ`open-sse/utils/proxyFetch.ts` (የአካባቢ ተለዋዋጮች) እና በ`open-sse/utils/networkProxy.ts` (ለእያንዳንዱ አቅራቢ ወይም በአጠቃላይ ሊዋቀር የሚችል)
-- SSRF / የወጪ URL መከላከያ፦ `src/shared/network/outboundUrlGuard.ts` — በአቅራቢ ጥሪዎች እና በwebhook መዳረሻዎች ላይ የአስተናጋጅ ማረጋገጫዎችን ያከናውናል፤ ሁነታው ከ`src/shared/network/outboundUrlGuardPolicy.ts` ይመጣል (ጠቋሚዎቹ በ`docs/reference/ENVIRONMENT.md` ውስጥ ይገኛሉ)
-- የአሂድ-ጊዜ የአካባቢ ማረጋገጫ፦ `src/lib/env/runtimeEnv.ts` — ለሁሉም የአካባቢ ተለዋዋጮች የZod ንድፍ፤ እንደ ማስጀመሪያ ስህተቶች/ማስጠንቀቂያዎች ይቀርባል
-- የማመሳሰያ ቶከኖች፦ `src/lib/db/syncTokens.ts` — ለውቅረት ጥቅል ማውረጃ መጨረሻ ነጥቦች የተወሰነ ወሰን ያላቸው ቶከኖች፤ በ`sync_tokens` SQLite ሰንጠረዥ የተደገፉ ናቸው (ፍልሰት `024_create_sync_tokens.sql`)
-- የWebSocket ቅድመ-ግንኙነት ማረጋገጫ፦ `src/lib/ws/handshake.ts` — የWS ማሻሻያ ጥያቄዎችን በAPI ቁልፍ ወይም በክፍለ-ጊዜ ኩኪ ያረጋግጣል
-- የቀጥታ ዳሽቦርድ WebSocket ማረጋገጫ፦ `src/server/ws/liveServer.ts` — sidecar (ወደብ `LIVE_WS_PORT`) የዳሽቦርድ ክፍለ-ጊዜ ኩኪ ወይም የአስተዳደር ወሰን (`manage`/`admin`) ያለው Bearer API ቁልፍ ይቀበላል፤ ለinference ብቻ የሚያገለግሉ ቁልፎችን አይቀበልም። ውስጣዊው `POST /__omniroute_event` የአታሚ መጨረሻ ነጥብ የፕሮክሲ-ዝላይ ራስጌ (`x-forwarded-*`፣ `x-real-ip`፣ `forwarded`፣ `via`) ከሌለ ብቻ የloopback አቻዎችን ይቀበላል
+- በ`providerConnections` ግቤቶች ውስጥ የሚቀመጡ የአቅራቢ ሚስጥሮች
+- በ`open-sse/utils/proxyFetch.ts` (env vars) እና `open-sse/utils/networkProxy.ts` (ለእያንዳንዱ አቅራቢ ወይም በአጠቃላይ ሊዋቀር የሚችል) በኩል የወጪ proxy ድጋፍ
+- SSRF / የወጪ URL መከላከያ፦ `src/shared/network/outboundUrlGuard.ts` — በአቅራቢ ጥሪዎች እና webhook መድረሻዎች ላይ የhost ማረጋገጫዎች፤ ሁነታው ከ`src/shared/network/outboundUrlGuardPolicy.ts` ይመጣል (`docs/reference/ENVIRONMENT.md` ውስጥ ያሉ flags)
+- የruntime env ማረጋገጫ፦ `src/lib/env/runtimeEnv.ts` — ለሁሉም የአካባቢ ተለዋዋጮች Zod schema፣ እንደ የማስጀመሪያ ስህተቶች/ማስጠንቀቂያዎች የሚቀርብ
+- የማመሳሰያ tokens፦ `src/lib/db/syncTokens.ts` — ለconfig bundle ማውረጃ endpoints የተወሰነ scope ያላቸው tokens፤ በ`sync_tokens` SQLite table የሚደገፉ (migration `024_create_sync_tokens.sql`)
+- የWebSocket handshake ማረጋገጫ፦ `src/lib/ws/handshake.ts` — የWS upgrade ጥያቄዎችን በAPI ቁልፍ ወይም በsession cookie ያረጋግጣል
+- የቀጥታ ዳሽቦርድ WebSocket ማረጋገጫ፦ `src/server/ws/liveServer.ts` — sidecar-ው (port `LIVE_WS_PORT`) የዳሽቦርድ session cookie ወይም የአስተዳደር scope (`manage`/`admin`) ያለውን Bearer API ቁልፍ ይቀበላል፤ ለinference ብቻ የሚያገለግሉ ቁልፎች ውድቅ ይደረጋሉ። ውስጣዊው `POST /__omniroute_event` publisher endpoint የproxy-hop header (`x-forwarded-*`፣ `x-real-ip`፣ `forwarded`፣ `via`) ከሌለ ብቻ loopback peersን ይቀበላል
 
 ## 5) የCloud ማመሳሰል
 
@@ -1091,11 +1091,11 @@ flowchart LR
 - የSQLite የመርሃ ግብር ፍልሰቶች እና በጅምር ጊዜ ራስ-ሰር የማሻሻያ ማያያዣዎች
 - የቆየ JSON → SQLite የፍልሰት ተኳሃኝነት መንገድ
 
-## 6) SSRF / የወጪ URL ጥበቃ
+## 6) SSRF / ወደ ውጭ የሚላክ URL ጥበቃ
 
-- `src/shared/network/outboundUrlGuard.ts` ሁሉንም የግል/loopback/link-local ዒላማ URLዎች ወደ አቅራቢ አስፈጻሚዎች ከመድረሳቸው በፊት ያግዳል
-- የአቅራቢ ሞዴል ፍለጋ እና የማረጋገጫ መስመሮች `src/shared/network/safeOutboundFetch.ts`ን ይጠቀማሉ፤ ይህም ከእያንዳንዱ የወጪ ጥያቄ በፊት ጥበቃውን ይተገብራል
-- የጥበቃ ስህተቶች HTTP 422 ያለው `URL_GUARD_BLOCKED` ሆነው ይታያሉ፣ እና በ`providerAudit.ts` በኩል በተገዢነት ኦዲት ዱካ ውስጥ ይመዘገባሉ
+- `BaseExecutor.assertOutboundUrlAllowed` (`open-sse/executors/base.ts`) በ`BaseExecutor.execute()` በኩል ለሚላኩ የውይይት ጥያቄዎች `src/shared/network/outboundUrlGuard.ts`ን ይተገብራል። ለሕዝብ ብቻ በሆነ ሁነታ (`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS=false` እና የግል ምልክቱ ጠፍቶ ሲሆን) የግል እና loopback አስተናጋጆችን እንዲሁም 169.254.0.0/16ን ያግዳል፤ በሌሎች ሁነታዎች ሁሉ የደመና ሜታዳታ አስተናጋጆችን ያግዳል። ማንኛውም የDNS ፍለጋ ከመደረጉ በፊት፣ የአስተናጋጁን ስም ወይም የIP ቀጥተኛ እሴት እንደተጻፈው ይፈትሻል። አብረው የተካተቱ አካባቢያዊ አቅራቢዎች ይህን ፍተሻ ይዘሉታል።
+- የአቅራቢ ሞዴል ፍለጋ እና የማረጋገጫ መንገዶች `src/shared/network/safeOutboundFetch.ts`ን ይጠቀማሉ፤ ይህም ከእያንዳንዱ ወደ ውጭ ከሚላክ ጥያቄ በፊት ጥበቃውን ይተገብራል
+- የጥበቃው ስህተቶች እንደ `URL_GUARD_BLOCKED` ከHTTP 503 ጋር ይታያሉ (`getSafeOutboundFetchErrorStatus`፤ የሞዴል-ፍለጋ መንገዱ 400ን ይመልሳል)፣ እና በማረጋገጥ ወቅት የሚከሰቱ እውነተኛ የSSRF እገዳዎች እንደ `provider.validation.ssrf_blocked` ክስተቶች በኦዲት መዝገብ ውስጥ ይመዘገባሉ
 
 ## ምልከታ እና የክወና ምልክቶች
 

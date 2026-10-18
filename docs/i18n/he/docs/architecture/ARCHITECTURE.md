@@ -11,76 +11,76 @@ _עודכן לאחרונה: 2026-06-28_
 ## תקציר מנהלים
 
 OmniRoute הוא שער ניתוב מקומי לבינה מלאכותית ולוח מחוונים המבוססים על Next.js.
-הוא מספק נקודת קצה יחידה התואמת ל-OpenAI‏ (`/v1/*`) ומנתב תעבורה בין מספר ספקים במעלה הזרם, עם תרגום, מעבר לגיבוי, רענון אסימונים ומעקב אחר שימוש.
+הוא מספק נקודת קצה יחידה התואמת ל-OpenAI (`/v1/*`) ומנתב תעבורה בין מספר ספקים חיצוניים, עם תרגום, מעבר לגיבוי, רענון אסימונים ומעקב אחר שימוש.
 
-יכולות ליבה:
+יכולות עיקריות:
 
-- ממשק API תואם OpenAI עבור כלי CLI/כלים אחרים (374 ספקים, 150 מודולי ביצוע)
-- תרגום בקשות/תגובות בין פורמטים של ספקים
-- מעבר לגיבוי באמצעות שילוב מודלים (רצף מרובה-מודלים)
+- ממשק API תואם OpenAI עבור כלי CLI וכלים אחרים (374 ספקים, 150 מודולי ביצוע)
+- תרגום בקשות/תגובות בין תבניות של ספקים
+- מעבר לגיבוי באמצעות שילוב מודלים (רצף מרובה מודלים)
 - שלבי שילוב מובנים (`provider + model + connection`) עם סדר בזמן ריצה לפי `compositeTiers`
 - מעבר לגיבוי ברמת החשבון (מספר חשבונות לכל ספק)
-- בדיקה מקדימה של מכסה ובחירת חשבון P2C מודעת-מכסה בנתיב הצ'אט הראשי
-- ניהול חיבורי ספקים באמצעות OAuth ומפתחות API‏ (27 מודולי ספקי OAuth)
-- יצירת הטמעות באמצעות `/v1/embeddings` ‏(18 ספקים)
-- יצירת תמונות באמצעות `/v1/images/generations` ‏(10+ ספקים, 20+ מודלים)
-- תמלול שמע באמצעות `/v1/audio/transcriptions` ‏(18 ספקים)
-- המרת טקסט לדיבור באמצעות `/v1/audio/speech` ‏(24 ספקים מובנים)
-- יצירת וידאו באמצעות `/v1/videos/generations` ‏(ComfyUI + SD WebUI)
-- יצירת מוזיקה באמצעות `/v1/music/generations` ‏(ComfyUI)
-- חיפוש באינטרנט באמצעות `/v1/search` ‏(20 ספקים)
+- בדיקה מקדימה של מכסה ובחירת חשבון P2C המתחשבת במכסה בנתיב הצ'אט הראשי
+- ניהול חיבורים לספקים באמצעות OAuth ומפתחות API (27 מודולי ספקי OAuth)
+- יצירת הטמעות באמצעות `/v1/embeddings` (18 ספקים)
+- יצירת תמונות באמצעות `/v1/images/generations` (יותר מ-10 ספקים, יותר מ-20 מודלים)
+- תמלול שמע באמצעות `/v1/audio/transcriptions` (18 ספקים)
+- המרת טקסט לדיבור באמצעות `/v1/audio/speech` (24 ספקים מובנים)
+- יצירת וידאו באמצעות `/v1/videos/generations` (ComfyUI + SD WebUI)
+- יצירת מוזיקה באמצעות `/v1/music/generations` (ComfyUI)
+- חיפוש באינטרנט באמצעות `/v1/search` (20 ספקים)
 - ניהול תוכן באמצעות `/v1/moderations`
 - דירוג מחדש באמצעות `/v1/rerank`
 - ניתוח תגיות חשיבה (``) עבור מודלי הנמקה
-- ניקוי תגובות לצורך תאימות מחמירה ל-OpenAI SDK
+- טיוב תגובות לצורך תאימות מחמירה ל-SDK של OpenAI
 - נרמול תפקידים (developer→system, system→user) לצורך תאימות בין ספקים
 - המרת פלט מובנה (json_schema → Gemini responseSchema)
-- אחסון מקומי מתמשך של ספקים, מפתחות, כינויים, שילובים, הגדרות ותמחור (122 מודולי מסד נתונים)
-- מעקב אחר שימוש/עלויות ורישום בקשות
-- סנכרון ענן אופציונלי לסנכרון מצב בין מספר מכשירים
+- אחסון מקומי מתמשך של ספקים, מפתחות, כינויים, שילובים, הגדרות ותמחור (122 מודולי DB)
+- מעקב אחר שימוש/עלות ורישום בקשות
+- סנכרון אופציונלי בענן לצורך סנכרון מצב בין מספר מכשירים
 - רשימת כתובות IP מורשות/חסומות לבקרת גישה ל-API
 - ניהול תקציב חשיבה (העברה ללא שינוי/אוטומטי/מותאם אישית/מסתגל)
 - הזרקת הנחיית מערכת גלובלית
-- מעקב אחר הפעלות וטביעת אצבע
-- הגבלת קצב משופרת לכל חשבון, עם פרופילים ייעודיים לספק
+- מעקב אחר הפעלות וטביעות אצבע
+- הגבלת קצב משופרת לכל חשבון, עם פרופילים ייעודיים לספקים
 - תבנית מפסק זרם לשיפור עמידות הספקים
-- הגנה מפני עומס המוני בו-זמני באמצעות נעילת mutex
-- מטמון למניעת כפילות של בקשות המבוסס על חתימה
-- שכבת דומיין: כללי עלות, מדיניות מעבר לגיבוי ומדיניות נעילה
-- Context Relay: סיכומי העברת הפעלה לשמירת רציפות בעת החלפת חשבונות
-- אחסון מתמשך של מצב הדומיין (מטמון SQLite בכתיבה מיידית עבור מעברים לגיבוי, תקציבים, נעילות ומפסקי זרם)
+- הגנה מפני עומס מתפרץ באמצעות נעילת mutex
+- מטמון למניעת כפילות בקשות המבוסס על חתימות
+- שכבת תחום: כללי עלות, מדיניות מעבר לגיבוי, מדיניות נעילה
+- Context Relay: סיכומי העברת הפעלה לשמירה על רציפות בעת החלפת חשבונות
+- התמדה של מצב התחום (מטמון SQLite עם כתיבה מיידית עבור מעברים לגיבוי, תקציבים, נעילות ומפסקי זרם)
 - מנוע מדיניות להערכה מרכזית של בקשות (נעילה → תקציב → מעבר לגיבוי)
 - טלמטריית בקשות עם צבירת זמני השהיה p50/p95/p99
-- טלמטריית יעדי שילוב ונתוני בריאות היסטוריים של יעדי שילוב באמצעות `combo_execution_key` / `combo_step_id`
+- טלמטריית יעדי שילוב ומצב היסטורי של יעדי שילוב באמצעות `combo_execution_key` / `combo_step_id`
 - מזהה מתאם (X-Request-Id) למעקב מקצה לקצה
-- רישום ביקורת תאימות עם אפשרות ביטול לכל מפתח API
+- רישום ביקורת תאימות עם אפשרות לביטול לכל מפתח API
 - מסגרת הערכה להבטחת איכות של LLM
 - לוח מחוונים לבריאות המערכת עם מצב מפסקי הזרם של הספקים בזמן אמת
-- שרת MCP‏ (110 כלים) עם 3 תעבורות (stdio/SSE/Streamable HTTP)
+- שרת MCP‏ (110 כלים) עם 3 אמצעי תעבורה (stdio/SSE/Streamable HTTP)
 - שרת A2A‏ (JSON-RPC 2.0 + SSE) עם מיומנויות ומחזור חיים של משימות
 - מערכת זיכרון (חילוץ, הזרקה, אחזור, סיכום)
-- מערכת מיומנויות (מרשם, מנגנון ביצוע, ארגז חול ומיומנויות מובנות)
-- פרוקסי MITM עם ניהול אישורים וטיפול ב-DNS
+- מערכת מיומנויות (רישום, ביצוע, ארגז חול, מיומנויות מובנות)
+- שרת proxy מסוג MITM עם ניהול אישורים וטיפול ב-DNS
 - תווכת הגנה מפני הזרקת הנחיות
 - צינור דחיסת הנחיות עם Caveman, RTK, צינורות מוערמים, שילובי דחיסה, חבילות שפה וניתוח נתונים
-- מרשם ACP‏ (Agent Communication Protocol)
+- רישום ACP‏ (Agent Communication Protocol)
 - ספקי OAuth מודולריים (22 מודולים נפרדים תחת `src/lib/oauth/providers/`)
-- סקריפטים להסרה ולהסרה מלאה
+- סקריפטים להסרת התקנה ולהסרה מלאה
 - פעולת תיקון סביבת OAuth
 - גשר WebSocket עבור לקוחות WS תואמי OpenAI‏ (`/v1/ws`)
 - ניהול אסימוני סנכרון (הנפקה/ביטול, הורדת חבילת תצורה עם ניהול גרסאות באמצעות ETag)
-- הגדרה מוגדרת מראש של GLM Thinking‏ (`glmt`) כספק מהשורה הראשונה
-- ספירת אסימונים היברידית (`/messages/count_tokens` בצד הספק, עם מעבר לאומדן במקרה הצורך)
-- יצירה אוטומטית של כינויי מודלים (30+ נרמולים של ניבים בין שרתי פרוקסי בעת ההפעלה)
-- אחזור יוצא בטוח עם הגנת SSRF, חסימת כתובות URL פרטיות וניסיונות חוזרים הניתנים להגדרה
-- ניסיונות חוזרים לצ'אט המודעים לתקופת צינון, עם `requestRetry` ו-`maxRetryIntervalSec` הניתנים להגדרה
-- אימות סביבת זמן הריצה באמצעות Zod בעת ההפעלה
-- ביקורת תאימות v2 עם עימוד, אירועי CRUD של ספקים ורישום אימותים שנחסמו עקב SSRF
+- הגדרת ספק מובנית מהשורה הראשונה עבור GLM Thinking‏ (`glmt`)
+- ספירת אסימונים היברידית (`/messages/count_tokens` בצד הספק, עם אומדן כגיבוי)
+- אתחול אוטומטי של כינויי מודלים (יותר מ-30 נרמולים של ניבים בין שרתי proxy בעת ההפעלה)
+- שליפה יוצאת בטוחה עם הגנת SSRF, חסימת כתובות URL פרטיות וניסיונות חוזרים הניתנים להגדרה
+- ניסיונות צ'אט חוזרים המתחשבים בתקופת צינון, עם `requestRetry` ו-`maxRetryIntervalSec` הניתנים להגדרה
+- אימות סביבת זמן ריצה באמצעות Zod בעת ההפעלה
+- ביקורת תאימות v2 עם עימוד, אירועי CRUD של ספקים ורישום אימות שנחסם עקב SSRF
 
 מודל זמן הריצה העיקרי:
 
-- נתיבי אפליקציית Next.js תחת `src/app/api/*` מממשים הן ממשקי API של לוח המחוונים והן ממשקי API לתאימות
-- ליבת SSE/ניתוב משותפת ב-`src/sse/*` + `open-sse/*` מטפלת בביצוע מול ספקים, תרגום, הזרמה, מעבר לגיבוי ושימוש
+- נתיבי אפליקציית Next.js תחת `src/app/api/*` מממשים הן את ממשקי ה-API של לוח המחוונים והן את ממשקי ה-API לתאימות
+- ליבה משותפת ל-SSE ולניתוב תחת `src/sse/*` + `open-sse/*` מטפלת בביצוע מול ספקים, בתרגום, בהזרמה, במעבר לגיבוי ובשימוש
 
 ## דיאגרמות עזר
 
@@ -260,14 +260,14 @@ flowchart LR
 
 ## 2) SSE + ליבת התרגום
 
-מודולי הזרימה הראשיים:
+מודולי הזרימה הראשית:
 
 - נקודת כניסה: `src/sse/handlers/chat.ts`
-- תזמור הליבה: `open-sse/handlers/chatCore.ts`
-- מתאמי הפעלה של ספקים: `open-sse/executors/*`
-- זיהוי פורמט/הגדרת ספק: `open-sse/services/provider.ts`
+- תזמור ליבה: `open-sse/handlers/chatCore.ts`
+- מתאמי הפעלה לספקים: `open-sse/executors/*`
+- זיהוי פורמט/תצורת ספק: `open-sse/services/provider.ts`
 - ניתוח/פתרון מודל: `src/sse/services/model.ts`, `open-sse/services/model.ts`
-- לוגיקת גיבוי חשבון: `open-sse/services/accountFallback.ts`
+- לוגיקת מעבר לחשבון חלופי: `open-sse/services/accountFallback.ts`
 - מרשם תרגום: `open-sse/translator/index.ts`
 - התמרות זרם: `open-sse/utils/stream.ts`, `open-sse/utils/streamHandler.ts`
 - חילוץ/נרמול שימוש: `open-sse/utils/usageTracking.ts`
@@ -281,43 +281,43 @@ flowchart LR
 
 שירותים (לוגיקה עסקית):
 
-- בחירת חשבונות/ניקוד: `open-sse/services/accountSelector.ts`
+- בחירת חשבון/ניקוד: `open-sse/services/accountSelector.ts`
 - ניהול מחזור החיים של ההקשר: `open-sse/services/contextManager.ts`
 - אכיפת מסנן IP: `open-sse/services/ipFilter.ts`
 - מעקב אחר הפעלות: `open-sse/services/sessionManager.ts`
-- מניעת כפילויות בבקשות: `open-sse/services/signatureCache.ts`
+- מניעת כפילות בבקשות: `open-sse/services/signatureCache.ts`
 - הזרקת הנחיית מערכת: `open-sse/services/systemPrompt.ts`
 - ניהול תקציב חשיבה: `open-sse/services/thinkingBudget.ts`
 - ניתוב מודלים באמצעות תווים כלליים: `open-sse/services/wildcardRouter.ts`
-- ניהול מגבלות קצב: `open-sse/services/rateLimitManager.ts`
-- מפסק זרם: `src/shared/utils/circuitBreaker.ts`
-- העברת הקשר: `open-sse/services/contextHandoff.ts` — יצירת תקציר העברה והזרקתו עבור אסטרטגיית ממסר הקשר
+- ניהול הגבלת קצב: `open-sse/services/rateLimitManager.ts`
+- מפסק מעגל: `src/shared/utils/circuitBreaker.ts`
+- העברת הקשר: `open-sse/services/contextHandoff.ts` — יצירה והזרקה של סיכום העברה עבור אסטרטגיית ממסר הקשר
 - דחיסה: `open-sse/services/compression/*` — דחיסה יזומה לפני תרגום הספק;
-  כוללת כללי Caveman, מסנני RTK, צינורות עיבוד מוערמים, שילובי דחיסה, נתונים סטטיסטיים ואימות
-- מאחזר מכסת Codex: `open-sse/services/codexQuotaFetcher.ts` — מאחזר את מכסת Codex לצורך החלטות העברה בממסר הקשר
-- ניסיון חוזר מודע לתקופת צינון: `src/sse/services/cooldownAwareRetry.ts` — ניסיונות חוזרים לכל מודל לאחר תקופת צינון, עם `requestRetry` / `maxRetryIntervalSec` הניתנים להגדרה
-- אחזור יוצא בטוח: `src/shared/network/safeOutboundFetch.ts` — אחזור מוגן של ספקים/מודלים עם הגנת SSRF, חסימת כתובות URL פרטיות, ניסיון חוזר ופסק זמן
-- שומר כתובות URL יוצאות: `src/shared/network/outboundUrlGuard.ts` — בדיקות מארח בכתובות URL של ספקים; `src/shared/network/outboundUrlGuardPolicy.ts` בוחר את המצב מתוך `OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS`, `OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS` ומתגי לוח המחוונים שלהן (ראו `docs/reference/ENVIRONMENT.md`)
+  כוללת כללי Caveman, מסנני RTK, צינורות עיבוד מוערמים, שילובי דחיסה, סטטיסטיקות ואימות
+- מאחזר מכסת Codex: `open-sse/services/codexQuotaFetcher.ts` — מאחזר את מכסת Codex עבור החלטות העברה בממסר הקשר
+- ניסיון חוזר המודע לתקופת צינון: `src/sse/services/cooldownAwareRetry.ts` — ניסיונות חוזרים לפי מודל לאחר תקופת צינון, עם `requestRetry` / `maxRetryIntervalSec` הניתנים להגדרה
+- אחזור יוצא בטוח: `src/shared/network/safeOutboundFetch.ts` — אחזור מוגן של ספק/מודל עם הגנת SSRF, חסימת כתובות URL פרטיות, ניסיון חוזר ופסק זמן
+- מגן כתובות URL יוצאות: `src/shared/network/outboundUrlGuard.ts` — בדיקות מארח עבור כתובות URL של ספקים; `src/shared/network/outboundUrlGuardPolicy.ts` בוחר את המצב מתוך `OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS`, `OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS` ומתגי לוח הבקרה שלהן (ראו `docs/reference/ENVIRONMENT.md`)
 - ברירות מחדל לבקשות ספק: `open-sse/services/providerRequestDefaults.ts` — ברירות מחדל ברמת הספק עבור `maxTokens`, `temperature`, `thinkingBudgetTokens`
 - קבועי ספק GLM: `open-sse/config/glmProvider.ts` — מודלי GLM משותפים, כתובות URL של מכסות, פסק זמן וברירות מחדל של GLMT
-- מקור Antigravity: `open-sse/config/antigravityUpstream.ts` — כתובת URL בסיסית וקבועים של נתיב הגילוי
-- קבועי לקוח Codex: `open-sse/config/codexClient.ts` — ערכי סוכן משתמש וגרסת לקוח הכוללים גרסה
-- זריעת כינויי מודלים: `src/lib/modelAliasSeed.ts` — זורע בעת ההפעלה יותר מ־30 כינויי ניבים בין שרתי proxy
+- ספק Antigravity במעלה הזרם: `open-sse/config/antigravityUpstream.ts` — קבועים עבור כתובת URL בסיסית ונתיב גילוי
+- קבועי לקוח Codex: `open-sse/config/codexClient.ts` — ערכי סוכן משתמש וגרסת לקוח בעלי גרסאות
+- זריעת כינויי מודלים: `src/lib/modelAliasSeed.ts` — זורע בעת האתחול יותר מ-30 כינויים בין ניבים של שרתי Proxy שונים
 
 מודולי שכבת התחום:
 
 - כללי עלות/תקציבים: `src/domain/costRules.ts`
-- מדיניות גיבוי: `src/domain/fallbackPolicy.ts`
+- מדיניות מעבר לחלופה: `src/domain/fallbackPolicy.ts`
 - פותר שילובים: `src/domain/comboResolver.ts`
 - מדיניות נעילה: `src/domain/lockoutPolicy.ts`
-- מנוע מדיניות: `src/domain/policyEngine.ts` — הערכה מרכזית של נעילה ← תקציב ← גיבוי
+- מנוע מדיניות: `src/domain/policyEngine.ts` — הערכה מרכזית בסדר נעילה → תקציב → מעבר לחלופה
 - קטלוג קודי שגיאה: `src/shared/constants/errorCodes.ts`
 - מזהה בקשה: `src/shared/utils/requestId.ts`
 - פסק זמן לאחזור: `src/shared/utils/fetchTimeout.ts`
 - טלמטריית בקשות: `src/shared/utils/requestTelemetry.ts`
 - תאימות/ביקורת: `src/lib/compliance/index.ts`
 - מריץ הערכות: `src/lib/evals/evalRunner.ts`
-- שמירת מצב התחום: `src/lib/db/domainState.ts` — פעולות CRUD של SQLite עבור שרשראות גיבוי, תקציבים, היסטוריית עלויות, מצב נעילה ומפסקי זרם
+- שמירת מצב התחום: `src/lib/db/domainState.ts` — פעולות CRUD ב-SQLite עבור שרשראות מעבר לחלופה, תקציבים, היסטוריית עלויות, מצב נעילה ומפסקי מעגל
 
 מודולי ספקי OAuth ‏(27 קבצים נפרדים תחת `src/lib/oauth/providers/`):
 
@@ -534,17 +534,17 @@ Jules) מאחורי מחזור חיים אחיד של משימות המגובה 
 - טבלאות (נוצרות ב-`src/lib/db/core.ts`): `domain_fallback_chains`, `domain_budgets`, `domain_cost_history`, `domain_lockout_state`, `domain_circuit_breakers`
 - תבנית מטמון כתיבה מיידית: מפות בזיכרון הן המקור המוסמך בזמן הריצה; שינויים נכתבים באופן סינכרוני ל-SQLite; המצב משוחזר ממסד הנתונים בהפעלה קרה
 
-## 4) אימות + משטחי אבטחה
+## 4) משטחי אימות ואבטחה
 
-- אימות לוח הבקרה באמצעות קובץ Cookie: `src/proxy.ts`, `src/app/api/auth/login/route.ts`
+- אימות באמצעות קובצי Cookie בלוח הבקרה: `src/proxy.ts`, `src/app/api/auth/login/route.ts`
 - יצירה/אימות של מפתחות API: `src/shared/utils/apiKey.ts`
-- סודות של ספקים נשמרים ברשומות `providerConnections`
-- תמיכה בפרוקסי יוצא דרך `open-sse/utils/proxyFetch.ts` (משתני סביבה) ו-`open-sse/utils/networkProxy.ts` (ניתן להגדרה לכל ספק בנפרד או באופן גלובלי)
+- סודות ספקים נשמרים ברשומות `providerConnections`
+- תמיכה בפרוקסי יוצא באמצעות `open-sse/utils/proxyFetch.ts` (משתני סביבה) ו-`open-sse/utils/networkProxy.ts` (ניתן להגדרה לכל ספק בנפרד או באופן גלובלי)
 - הגנה מפני SSRF / כתובות URL יוצאות: `src/shared/network/outboundUrlGuard.ts` — בדיקות מארח בקריאות לספקים וביעדי webhook; המצב מגיע מ-`src/shared/network/outboundUrlGuardPolicy.ts` (דגלים ב-`docs/reference/ENVIRONMENT.md`)
 - אימות משתני סביבה בזמן ריצה: `src/lib/env/runtimeEnv.ts` — סכמת Zod לכל משתני הסביבה, המוצגת כשגיאות/אזהרות בעת ההפעלה
-- אסימוני סנכרון: `src/lib/db/syncTokens.ts` — אסימונים בעלי היקף מוגדר עבור נקודות קצה להורדת חבילות תצורה; מגובים על ידי טבלת SQLite בשם `sync_tokens` (מיגרציה `024_create_sync_tokens.sql`)
+- אסימוני סנכרון: `src/lib/db/syncTokens.ts` — אסימונים מוגבלי-היקף עבור נקודות קצה להורדת חבילות תצורה; מגובים על ידי טבלת SQLite בשם `sync_tokens` (מיגרציה `024_create_sync_tokens.sql`)
 - אימות לחיצת היד של WebSocket: `src/lib/ws/handshake.ts` — מאמת בקשות שדרוג WS באמצעות מפתח API או קובץ Cookie של הפעלה
-- אימות WebSocket חי של לוח הבקרה: `src/server/ws/liveServer.ts` — שירות ה-sidecar (יציאה `LIVE_WS_PORT`) מקבל קובץ Cookie של הפעלת לוח הבקרה או מפתח Bearer API בעל היקף ניהול (`manage`/`admin`); מפתחות המיועדים להסקה בלבד נדחים. נקודת הקצה הפנימית שלו לפרסום, `POST /__omniroute_event`, מקבלת עמיתים מ-loopback בלבד כאשר לא קיימת כותרת מעבר-פרוקסי (`x-forwarded-*`, `x-real-ip`, `forwarded`, `via`)
+- אימות WebSocket חי של לוח הבקרה: `src/server/ws/liveServer.ts` — תהליך העזר (יציאה `LIVE_WS_PORT`) מקבל קובץ Cookie של הפעלת לוח הבקרה או מפתח Bearer API בעל היקף ניהול (`manage`/`admin`); מפתחות להסקה בלבד נדחים. נקודת הקצה הפנימית שלו לפרסום `POST /__omniroute_event` מקבלת עמיתי loopback רק כאשר לא קיימת כותרת של דילוג פרוקסי (`x-forwarded-*`, `x-real-ip`, `forwarded`, `via`)
 
 ## 5) סנכרון ענן
 
@@ -1093,11 +1093,11 @@ flowchart LR
 - מיגרציות של סכמת SQLite ונקודות חיבור לשדרוג אוטומטי בעת ההפעלה
 - נתיב תאימות למיגרציה מ-JSON ישן ל-SQLite
 
-## 6) SSRF / מגן כתובות URL יוצאות
+## 6) SSRF / הגנה על כתובות URL יוצאות
 
-- `src/shared/network/outboundUrlGuard.ts` חוסם את כל כתובות ה-URL הפרטיות/loopback/link-local לפני שהן מגיעות למבצעי הבקשות של הספק
-- נתיבי גילוי ואימות המודלים של הספק משתמשים ב-`src/shared/network/safeOutboundFetch.ts`, שמחיל את המגן לפני כל בקשה יוצאת
-- שגיאות המגן מוצגות כ-`URL_GUARD_BLOCKED` עם HTTP 422 ונרשמות ביומן ביקורת התאימות באמצעות `providerAudit.ts`
+- `BaseExecutor.assertOutboundUrlAllowed` (`open-sse/executors/base.ts`) מחיל את `src/shared/network/outboundUrlGuard.ts` על בקשות צ'אט הנשלחות דרך `BaseExecutor.execute()`. במצב ציבורי בלבד (`OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS=false` כאשר הדגל הפרטי כבוי), הוא חוסם מארחים פרטיים ומארחי loopback וכן את 169.254.0.0/16; בכל מצב אחר הוא חוסם מארחי מטא-נתונים של ספקי ענן. הוא בודק את שם המארח או את כתובת ה-IP המפורשת כפי שנכתבו, לפני כל בדיקת DNS. ספקים מקומיים מובנים מדלגים על בדיקה זו.
+- נתיבי גילוי ואימות של מודלים אצל ספקים משתמשים ב-`src/shared/network/safeOutboundFetch.ts`, שמחיל את ההגנה לפני כל בקשה יוצאת
+- שגיאות הגנה מוצגות כ-`URL_GUARD_BLOCKED` עם HTTP 503 (`getSafeOutboundFetchErrorStatus`; נתיב גילוי המודלים מחזיר 400), וחסימות SSRF אמיתיות במהלך האימות נרשמות ביומן הביקורת כאירועי `provider.validation.ssrf_blocked`
 
 ## נראות ואותות תפעוליים
 
