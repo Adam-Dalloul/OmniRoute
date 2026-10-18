@@ -1,0 +1,1 @@
+- **fix(ci):** Register four existing unit test files in the Stryker coverage list, restoring seven missing test/module associations without changing mutation targets or thresholds ([#17083](https://github.com/diegosouzapw/OmniRoute/pull/17083)).
