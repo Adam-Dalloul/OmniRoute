@@ -1,0 +1,1 @@
+- fix(docs): Render MDX links with the default Fumadocs component map while preserving dynamic imports and documentation URL resolution (#17051).
