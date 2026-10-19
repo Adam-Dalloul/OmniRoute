@@ -34,7 +34,9 @@ Studio mai shafuka uku wanda ya haɗa binciken yanar gizo, samo bayanai daga yan
 
 ---
 
-## Shafin Search
+## Shafuka
+
+### Shafin Search
 
 Yana faɗaɗa `SearchForm` + `ResultsPanel` + `RerankPanel` da suke akwai zuwa shafi:
 
