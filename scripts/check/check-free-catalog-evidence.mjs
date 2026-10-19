@@ -2,8 +2,15 @@
 import { createHash } from "node:crypto";
 import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
-import { FREE_MODEL_BUDGETS } from "../../open-sse/config/freeModelCatalog.data.ts";
 import { catalogKey, validateCatalogEvidence } from "./freeCatalogEvidence.mjs";
+
+// Isolate DATA_DIR before loading application modules so the check never opens the
+// operator database (tests/unit/repo-checks-isolate-datadir.test.ts).
+if (!process.env.DATA_DIR?.trim()) delete process.env.DATA_DIR;
+if (process.env.OMNIROUTE_ALLOW_DEFAULT_DATA_DIR !== "1") {
+  await import("../../tests/_setup/isolateDataDir.ts");
+}
+const { FREE_MODEL_BUDGETS } = await import("../../open-sse/config/freeModelCatalog.data.ts");
 
 const POLICY_PATH = "config/quality/free-catalog-evidence.json";
 const SEED_PATH = "config/quality/free-catalog-legacy-seed.json";
