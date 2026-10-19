@@ -241,106 +241,89 @@ xAI ወይም Grok CLIን ሲያገናኙ `1455`ን በ`56121`/`56122`፣ `20128
 
 ```bash
 omniroute tokens create --name "laptop" --scope write [--expires 30]
-#   ↳ ምስጢሩን አንድ ጊዜ ብቻ ያትማል — አሁን ይቅዱት
-omniroute tokens list                 # የተሸፈኑ፦ id, name, scope, prefix, status, expiry
-omniroute tokens revoke <id|prefix>   # ወዲያውኑ ይሻር
-omniroute tokens scopes               # ሦስቱን የፈቃድ ወሰኖች ያብራራል
+#   ↳ ሚስጥሩን አንድ ጊዜ ብቻ ያትማል — አሁኑኑ ይገልብጡት
+omniroute tokens list                 # በድብቅ፦ id, name, scope, prefix, status, expiry
+omniroute tokens revoke <id|prefix>   # ወዲያውኑ ይሽሩ
+omniroute tokens scopes               # ሶስቱን ወሰኖች ያብራራል
 ```
 
-የ`tokens` ትዕዛዞች የ**admin** ማረጋገጫ ይፈልጋሉ። በዳሽቦርዱ ውስጥ በ**Settings → Access Tokens** ስርም ቶከኖችን ማስተዳደር ይችላሉ (መፍጠር፣ መሻር፣ አንድ ጊዜ ብቻ መቅዳት)።
+`tokens` ትእዛዞች **admin** ምስክርነት ይፈልጋሉ። ቶከኖችን በዳሽቦርዱ **Settings → Access Tokens** ስር ማስተዳደርም ይችላሉ (መፍጠር፣ መሻር፣ አንድ-ጊዜ መቅዳት)።
 
-አንድ ቶከን ከፈጣሪው የፈቃድ ደረጃ የበለጠ ልዩ መብት እንዲኖረው ፈጽሞ ሊመነጭ አይችልም። የ`admin` ቶከን ሊፈጠር የሚችለው በኦፕሬተሩ ብቻ ነው — በዳሽቦርድ ክፍለ ጊዜ፣ በራሱ ሰርቨር ላይ ባለው የአካባቢ CLI፣ በይለፍ ቃሉ `omniroute connect`ን በመጠቀም፣ ወይም መግባት በተሰናከለበት ኢንስታንስ ነው። የማሽን ማረጋገጫዎች (የ`admin` መዳረሻ ቶከን፣ ወይም የ`manage`/`admin` ፈቃድ ወሰን ያለው API ቁልፍ) የ`write` እና `read` ቶከኖችን ብቻ ማመንጨት ይችላሉ፤ `--scope admin` እንዲፈጥሩ መጠየቅ `403` ይመልሳል።
-
-ቶከን ከፈጣሪው የበለጠ ፈቃድ ኖሮት ፈጽሞ ሊፈጠር አይችልም። `admin` ቶከን ሊፈጥር የሚችለው ኦፕሬተሩ ብቻ ነው፦ በዳሽቦርድ ክፍለ ጊዜ፣ በአገልጋዩ ራሱ ላይ ባለው የአካባቢ CLI፣ በይለፍ ቃል ከ `omniroute connect` ጋር፣ ወይም መግባት በተሰናከለበት ኢንስታንስ። የማሽን ማረጋገጫዎች (`admin` የመዳረሻ ቶከን ወይም `manage`/`admin` ወሰን ያለው API ቁልፍ) `write` እና `read` ቶከኖችን ብቻ ሊፈጥሩ ይችላሉ፤ በእነሱ `--scope admin` መጠየቅ `403` ይመልሳል።
+ቶከን ከፈጣሪው ከያዘው በላይ ልዩ መብት ጋር ፈጽሞ ሊወጣ አይችልም። `admin` ቶከን የሚፈጠረው በኦፕሬተሩ ብቻ ነው — የዳሽቦርድ ክፍለ-ጊዜ፣ በአገልጋዩ ላይ ያለው የአካባቢ CLI፣ ወይም ከይለፍ ቃል ጋር `omniroute connect`። ማሽን ምስክርነቶች (`admin` የመዳረሻ ቶከን፣ ወይም `manage`/`admin` ወሰን ያለው የAPI ቁልፍ) `write` እና `read` ቶከኖችን ብቻ ማውጣት ይችላሉ፤ `--scope admin` ቢጠይቁ `403` ይመለሳል። መግቢያን ማሰናከል ማውጣቱን አይከፍትም፦ ማንኛውም ወሰን ያለው የመዳረሻ ቶከን ሁልጊዜ-የተረጋገጡ መንገዶች የሚቀበሉት ምስክርነት ነው፣ ስለዚህ ማንነቱ ያልታወቀ ጥሪ በማንኛውም ወሰን `401` ያገኛል።
 
 ---
 
-## የኮድ ማዘጋጃ CLIን ከርቀት ካታሎግ ማዋቀር
+## ከርቀት ካታሎግ ለኮድ CLI ማዋቀር
 
-`omniroute configure` የ**ንቁ አገልጋዩን** የቀጥታ ሞዴል ካታሎግ ያነባል፣ እና በ**እርስዎ** ማሽን ላይ
-ውቅር ይጽፋል።
+`omniroute configure` **ንቁ አገልጋዩ**ን የቀጥታ ሞዴል ካታሎግ ያነባል እና በ**እርስዎ** ማሽን ላይ ውቅር ይጽፋል።
 
 ```bash
 omniroute configure codex
-#   አቅራቢዎች: glm, kmc, ollamacloud, opencode-go, …
-#   አቅራቢ: glm
-#   የሞዴል መታወቂያ: glm/glm-5.2
+#   አቅራቢዎች፦ glm, kmc, ollamacloud, opencode-go, …
+#   አቅራቢ፦ glm
+#   የሞዴል መለያ፦ glm/glm-5.2
 #   ✔ ~/.codex/glm52.config.toml ተጽፏል
-#   አጠቃቀም:  codex --profile glm52
+#   ለመጠቀም፦ codex --profile glm52
 
-# መስተጋብራዊ ያልሆነ
+# ያለ ጥያቄ (non-interactive)
 omniroute configure codex --provider glm --model glm/glm-5.2 --name glm52
 
-# በተደጋጋሚ የሚጠቀሙበትን ሞዴል በመስተጋብራዊው መራጭ አናት ላይ ያቆዩ
+# በተደጋጋሚ የሚጠቀሙትን ሞዴል በይነተገናኝ መምረጫው አናት ላይ ያቆዩ
 omniroute configure codex --provider glm --model glm/glm-5.2 --favorite --yes
 ```
 
-መራጩ በአካባቢያዊው `model-preferences.json` ፋይል ውስጥ በዐውድ እና በCLI ዒላማ
-የተወሰኑ የሞዴል መታወቂያዎችን ብቻ ያስቀምጣል (URLዎችን ወይም ማረጋገጫዎችን ፈጽሞ አያስቀምጥም)። ተወዳጆች
-ከቅርብ ጊዜ ምርጫዎች በፊት ይታያሉ፤ የተመረጠን ሞዴል ከዚያ ዐውድ/ዒላማ ዝርዝር
-ለማስወገድ `--unfavorite`ን ይጠቀሙ።
+መምረጫው በአካባቢው `model-preferences.json` ፋይል ውስጥ የሞዴል መለያዎችን ብቻ ያስቀምጣል (URLም ሆነ ምስክርነት በፍጹም አይደለም)፣ በአውድና በCLI ዒላማ ተወስኖ። ተወዳጆች ከቅርብ ጊዜ ምርጫዎች ቀድመው ይታያሉ፤ የተመረጠን ሞዴል ከዚያ አውድ/ዒላማ ዝርዝር ለማስወገድ `--unfavorite` ይጠቀሙ።
 
-የተጻፈው መገለጫ የግምት ቁልፉን በenv var
-(`OMNIROUTE_API_KEY`) ይጠቅሳል — ሚስጥሩ በዲስክ ላይ ፈጽሞ አይጻፍም። ለአንድ ጊዜው
-መሠረታዊ Codex ማዋቀር (የ`[model_providers.omniroute]` ብሎክ)፣
-[CODEX-CLI-CONFIGURATION.md](./CODEX-CLI-CONFIGURATION.md)ን ይመልከቱ።
+የተጻፈው ፕሮፋይል የኢንፈረንስ ቁልፉን በአካባቢ ተለዋዋጭ (`OMNIROUTE_API_KEY`) ይጠቅሳል — ሚስጥሩ ወደ ዲስክ በፍጹም አይጻፍም። ለአንዴ የመጀመሪያ የCodex መሰረታዊ ማዋቀር (የ`[model_providers.omniroute]` ብሎክ) [CODEX-CLI-CONFIGURATION.md](./CODEX-CLI-CONFIGURATION.md) ይመልከቱ።
 
-### CLIን ከርቀት አገልጋዩ ጋር ማስጀመር (ምንም ውቅር ሳይጻፍ)
+### ከርቀት CLI ማስጀመር (ውቅር ሳይጻፍ)
 
-`omniroute run <target>` ንቁውን ዐውድም ያከብራል፦ የርቀት መሠረታዊ URL
-እና የዐውዱ ማረጋገጫ በተጀመረው ሂደት ውስጥ ብቻ ይገባሉ።
+`omniroute run <target>` ንቁውን አውድም ያከብራል፦ የርቀቱ መሰረት URL እና የአውዱ ምስክርነት ወደ ተጀመረው ሂደት ብቻ ይገባሉ።
 
 ```bash
 omniroute connect 192.168.0.15
-omniroute run claude   --model openai/gpt-5.4          # Claude Code → የርቀት አገልጋይ
+omniroute run claude   --model openai/gpt-5.4          # Claude Code → ርቀት
 omniroute run gemini   --model glm/glm-5.2 -- --skip-trust -p "hello"
 omniroute run opencode --model glm/glm-5.2 -- run "reply OK"
 
-# በትክክል ምን እንደሚጀመር አስቀድመው ይመልከቱ (የenv ቁልፍ ስሞች ብቻ፣ እሴቶች ፈጽሞ አይታዩም):
+# ምን እንደሚጀመር በትክክል ቅድመ-እይታ (የአካባቢ ተለዋዋጮች ስሞች ብቻ፣ እሴቶች በፍጹም አይታዩም)፦
 omniroute run codex --dry-run --json
 ```
 
-ዒላማዎች፦ `claude`፣ `codex`፣ `aider`፣ `goose`፣ `opencode`፣ `qwen`፣ `gemini`
-(ነጠላ ምንጭ፦ `bin/cli/cli-manifest.mjs`)። Qwen እና Gemini ሲወጡ
-የሚወገድ ጊዜያዊ የተነጠለ home በመጠቀም ይሰራሉ፤ ስለዚህ ማስጀመሩ የግል መሣሪያ ውቅርዎን
-ፈጽሞ አይነካም — ወይም ወደዚያ ምንም አያፈስም።
+ዒላማዎች፦ `claude`፣ `codex`፣ `aider`፣ `goose`፣ `opencode`፣ `qwen`፣ `gemini` (ዋናው ምንጭ፦ `bin/cli/cli-manifest.mjs`)። Qwen እና Gemini የሚሰሩት ሲወጡ በሚወገድ ጊዜያዊ የተለየ መነሻ ማውጫ ነው፣ ስለዚህ ማስጀመሩ የግል የመሳሪያ ውቅርዎን በፍጹም አይነካውም — ወደ እሱም አይፈስም።
 
-### ለእያንዳንዱ CLI የማዋቀሪያ ትዕዛዞች
+### ለእያንዳንዱ CLI የማዋቀር ትእዛዞች
 
-እያንዳንዱ የሚደገፍ CLI የርቀት አገልጋይን የሚያውቅ የማዋቀሪያ ትዕዛዝ አለው (ሁሉም ንቁውን
-ዐውድ ወይም `--remote <url> --api-key <key>`ን ያከብራሉ)፦
+ለእያንዳንዱ የሚደገፍ CLI ከርቀት ጋር የሚያውቅ የማዋቀር ትእዛዝ አለው (ሁሉም ንቁውን አውድ ያከብራሉ፣ ወይም `--remote <url> --api-key <key>`)፦
 
-| CLI         | ትዕዛዝ                       | የሚጽፈው                                                                                                                                                               |
-| ----------- | -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Codex       | `omniroute setup-codex`    | `~/.codex/<name>.config.toml` መገለጫዎች (ለእያንዳንዱ ሞዴል)                                                                                                                  |
-| Claude Code | `omniroute setup-claude`   | `~/.claude/profiles/<name>/settings.json` (ለእያንዳንዱ ሞዴል)                                                                                                             |
-| OpenCode    | `omniroute setup-opencode` | `~/.config/opencode/opencode.json` — ሁሉንም የካታሎግ ሞዴሎች የያዘው፣ ከopenai ጋር ተኳሃኝ የሆነው `omniroute` አቅራቢ (`opencode -m omniroute/<model>`ን ያስኪዱ)                            |
-| Cline       | `omniroute setup-cline`    | `~/.cline/data/{globalState,secrets}.json` (የCLI ሁነታ) + ለመለጠፍ የVS Code ቅጥያ ቅንብሮችን ያትማል (ከOpenAI ጋር ተኳሃኝ፣ Base URL **ያለ** `/v1`)                                     |
-| Kilo Code   | `omniroute setup-kilo`     | `~/.local/share/kilo/auth.json` (CLI) + የVS Code `kilocode.*` ቅንብሮች — ከOpenAI ጋር ተኳሃኝ፣ Base URL **ከ** `/v1` **ጋር**                                                  |
-| Continue    | `omniroute setup-continue` | `~/.continue/config.yaml` (VS Code/JetBrains + `cn` CLI) — `provider: openai`፣ `apiBase` **ከ** `/v1` **ጋር**፣ ቁልፉ በ`${{ secrets.OMNIROUTE_API_KEY }}` በኩል            |
-| Cursor      | `omniroute setup-cursor`   | በመተግበሪያው ውስጥ የሚከናወኑ ደረጃዎችን ያትማል (Settings → Models → Override OpenAI Base URL **ከ** `/v1` **ጋር** + ቁልፍ + ሞዴል)። የCursor ውቅር ግልጽ ያልሆነ SQLite ነው — ለውይይት ፓነሉ ብቻ        |
-| Roo Code    | `omniroute setup-roo`      | የRoo ማስመጫ JSON (`~/.omniroute/roo-settings.json`) ይጽፋል + `roo-cline.autoImportSettingsPath`ን ያዘጋጃል + የUI ደረጃዎችን ያትማል (ከOpenAI ጋር ተኳሃኝ፣ Base URL **ከ** `/v1` **ጋር**) |
-| Crush       | `omniroute setup-crush`    | `~/.config/crush/crush.json` — `openai-compat` አቅራቢ፣ `base_url` **ከ** `/v1` **ጋር**፣ ቁልፉ በ`$OMNIROUTE_API_KEY` በኩል                                                   |
-| Zed         | `omniroute setup-zed`      | `~/.config/zed/settings.json` — `language_models.openai_compatible.omniroute`፣ `api_url` **ከ** `/v1` **ጋር**፣ ቁልፉን Zed ከ`$OMNIROUTE_API_KEY` ያነባል (ፈጽሞ አይጻፍም)        |
-| Goose       | `omniroute setup-goose`    | `~/.config/goose/config.yaml` (`GOOSE_PROVIDER=openai` + `OPENAI_HOST` **ያለ** `/v1` + `GOOSE_MODEL`) + የenv አሰራር                                                    |
-| Aider       | `omniroute setup-aider`    | `~/.aider.conf.yml` (`openai-api-base` **ያለ** `/v1` + `model: openai/<id>`) + የenv አሰራር (`aider --message --yes`)                                                   |
-| Qwen Code   | `omniroute setup-qwen`     | የ`~/.qwen/settings.json` V4 `modelProviders.openai` ግቤት + `OMNIROUTE_API_KEY` በ`~/.qwen/.env` ውስጥ                                                                   |
+| CLI         | ትእዛዝ                       | የሚጽፈው                                                                                                                                                             |
+| ----------- | -------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Codex       | `omniroute setup-codex`    | `~/.codex/<name>.config.toml` ፕሮፋይሎች (በሞዴል)                                                                                                                       |
+| Claude Code | `omniroute setup-claude`   | `~/.claude/profiles/<name>/settings.json` (በሞዴል)                                                                                                                  |
+| OpenCode    | `omniroute setup-opencode` | `~/.config/opencode/opencode.json` — ከእያንዳንዱ የካታሎግ ሞዴል ጋር `omniroute` openai-compatible አቅራቢ (`opencode -m omniroute/<model>` ብለው ያሂዱ)                            |
+| Cline       | `omniroute setup-cline`    | `~/.cline/data/{globalState,secrets}.json` (CLI ሁነታ) + ለመለጠፍ የVS Code ቅጥያ ቅንብሮችን ያትማል (OpenAI-compatible፣ Base URL **ያለ** `/v1`)                                  |
+| Kilo Code   | `omniroute setup-kilo`     | `~/.local/share/kilo/auth.json` (CLI) + VS Code `kilocode.*` ቅንብሮች — OpenAI-compatible፣ Base URL **ከ** `/v1` ጋር                                                   |
+| Continue    | `omniroute setup-continue` | `~/.continue/config.yaml` (VS Code/JetBrains + `cn` CLI) — `provider: openai`፣ `apiBase` **ከ** `/v1` ጋር፣ ቁልፉ በ`${{ secrets.OMNIROUTE_API_KEY }}` በኩል              |
+| Cursor      | `omniroute setup-cursor`   | በመተግበሪያው ውስጥ ያሉ ደረጃዎችን ያትማል (Settings → Models → Override OpenAI Base URL **ከ** `/v1` ጋር + ቁልፍ + ሞዴል)። የCursor ውቅር ግልጽ ያልሆነ SQLite ነው — የውይይት ፓነል ብቻ              |
+| Roo Code    | `omniroute setup-roo`      | የRoo ማስመጫ JSON ይጽፋል (`~/.omniroute/roo-settings.json`) + `roo-cline.autoImportSettingsPath`ን ያዘጋጃል + የUI ደረጃዎችን ያትማል (OpenAI-compatible፣ Base URL **ከ** `/v1` ጋር) |
+| Crush       | `omniroute setup-crush`    | `~/.config/crush/crush.json` — `openai-compat` አቅራቢ፣ `base_url` **ከ** `/v1` ጋር፣ ቁልፉ በ`$OMNIROUTE_API_KEY` በኩል                                                     |
+| Zed         | `omniroute setup-zed`      | `~/.config/zed/settings.json` — `language_models.openai_compatible.omniroute`፣ `api_url` **ከ** `/v1` ጋር፣ ቁልፉን Zed ከ`$OMNIROUTE_API_KEY` ያነባል (በፍጹም አይጻፍም)         |
+| Goose       | `omniroute setup-goose`    | `~/.config/goose/config.yaml` (`GOOSE_PROVIDER=openai` + `OPENAI_HOST` **ያለ** `/v1` + `GOOSE_MODEL`) + የአካባቢ recipe                                               |
+| Aider       | `omniroute setup-aider`    | `~/.aider.conf.yml` (`openai-api-base` **ያለ** `/v1` + `model: openai/<id>`) + የአካባቢ recipe (`aider --message --yes`)                                              |
+| Qwen Code   | `omniroute setup-qwen`     | `~/.qwen/settings.json` V4 `modelProviders.openai` ግቤት + `OMNIROUTE_API_KEY` በ`~/.qwen/.env`                                                                      |
 
 ```bash
-# OpenCode (ከopenai ጋር ተኳሃኝ አቅራቢ፣ ሁሉም የካታሎግ ሞዴሎች፣ የርቀት VPS)
+# OpenCode (openai-compatible አቅራቢ፣ ሁሉም የካታሎግ ሞዴሎች፣ ርቀት VPS)
 omniroute setup-opencode --remote http://192.168.0.15:20128 --api-key oma_live_xxx
-omniroute setup-opencode --only glm,kimi        # የሚዛመዱ ሞዴሎችን ብቻ ያቆዩ
-opencode -m omniroute/glm/glm-5.2 "..."          # በመጀመሪያ OMNIROUTE_API_KEYን export ያድርጉ
+omniroute setup-opencode --only glm,kimi        # ተዛማጅ ሞዴሎችን ብቻ ያቆያል
+opencode -m omniroute/glm/glm-5.2 "..."          # መጀመሪያ OMNIROUTE_API_KEY ይላኩ
 ```
 
-> OpenCode የበለጸገ **plugin** ውህደትም አለው፦ `omniroute setup opencode`
-> (አሁን `--remote`ን በመጠቀም የርቀት አገልግሎትን የሚደግፍ) `@omniroute/opencode-plugin`ን ይጭናል።
-> `setup-opencode` ቀላልና ከopenai ጋር ተኳሃኝ የሆነው አማራጭ ነው። የAPI ቁልፉ
-> በ`{env:OMNIROUTE_API_KEY}` በኩል ይጠቀሳል — ፈጽሞ ወደ ዲስክ አይጻፍም።
+> OpenCode ሌላም ይበልጥ የበለጸገ **plugin** ውህደት አለው፦ `omniroute setup opencode`
+> (አሁን በ`--remote` ርቀትን የሚያውቅ) `@omniroute/opencode-plugin`ን ይጭናል።
+> `setup-opencode` ቀላል ክብደት ያለው ተኳሃኝ-OpenAI አማራጭ ነው። የAPI ቁልፉ የሚጠቀሰው በ`{env:OMNIROUTE_API_KEY}` ነው — በፍጹም ወደ ዲስክ አይጻፍም።
 >
-> በOpenCode v2 ላይ በምትኩ `@omniroute/opencode-plugin-v2`ን ይጠቀሙ፦ ተመሳሳይ ካታሎግ፣
-> የተለየ የመጫኛ ውል። ውህደቱ ሲገናኝ ቁልፉን ከOpenCode የራሱ የማረጋገጫ መረጃ
-> ማከማቻ ያነባል፤ ስለዚህ የርቀት መግቢያ በር በ`opencode.json` ውስጥ ምንም ቁልፍ አያስፈልገውም።
+> በOpenCode v2 ላይ በምትኩ `@omniroute/opencode-plugin-v2` ይጠቀሙ፦ ተመሳሳይ ካታሎግ፣ የተለየ የloader ውል። ውህደቱ ሲገናኝ ቁልፉን ከOpenCode የራሱ ምስክርነት ማከማቻ ያነባል፣ ስለዚህ ርቀት ያለ gateway በ`opencode.json` ውስጥ ምንም ቁልፍ አያስፈልገውም።
 
 ---
 

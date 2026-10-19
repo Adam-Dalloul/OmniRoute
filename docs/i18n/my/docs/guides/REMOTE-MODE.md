@@ -237,115 +237,94 @@ xAI သို့မဟုတ် Grok CLI ကို ချိတ်ဆက်သ�
 
 ---
 
-## တိုကင်များကို စီမံခန့်ခွဲခြင်း
+## Token များကို စီမံခြင်း
 
 ```bash
 omniroute tokens create --name "laptop" --scope write [--expires 30]
-#   ↳ လျှို့ဝှက်တန်ဖိုးကို တစ်ကြိမ်သာ ပြသမည် — ယခုပင် ကူးယူထားပါ
-omniroute tokens list                 # ဖုံးကွယ်ထားသည်- id၊ အမည်၊ scope၊ prefix၊ အခြေအနေ၊ သက်တမ်းကုန်ဆုံးချိန်
-omniroute tokens revoke <id|prefix>   # ချက်ချင်း ရုပ်သိမ်းမည်
-omniroute tokens scopes               # scope သုံးမျိုးကို ရှင်းပြမည်
+#   ↳ secret ကို တစ်ကြိမ်သာ ပြသသည် — ယခုပဲ ကူးယူပါ
+omniroute tokens list                 # masked: id, name, scope, prefix, status, expiry
+omniroute tokens revoke <id|prefix>   # ချက်ချင်း ပြန်ရုပ်သိမ်းပါ
+omniroute tokens scopes               # scope သုံးမျိုးကို ရှင်းပြသည်
 ```
 
-`tokens` command များအတွက် **admin** အထောက်အထား လိုအပ်သည်။ Dashboard ရှိ
-**Settings → Access Tokens** အောက်တွင်လည်း တိုကင်များကို စီမံခန့်ခွဲနိုင်သည်
-(ဖန်တီးခြင်း၊ ရုပ်သိမ်းခြင်း၊ တစ်ကြိမ်သာ ကူးယူခြင်း)။
+`tokens` command များသည် **admin** credential လိုအပ်သည်။ Dashboard ရှိ **Settings → Access Tokens** တွင်လည်း token များကို စီမံနိုင်သည် (ဖန်တီးခြင်း၊ ပြန်ရုပ်သိမ်းခြင်း၊ တစ်ကြိမ်သာ ကူးယူခြင်း)။
 
-တိုကင်တစ်ခုကို ၎င်းအား ဖန်တီးသူ ပိုင်ဆိုင်သည့် လုပ်ပိုင်ခွင့်ထက် ပိုမိုမြင့်မားသော လုပ်ပိုင်ခွင့်ဖြင့် မည်သည့်အခါမျှ ဖန်တီး၍မရပါ။ `admin` တိုကင်ကို အော်ပရေတာကသာ ဖန်တီးနိုင်သည် — dashboard session၊ server ကိုယ်တိုင်ပေါ်ရှိ local CLI၊ password ဖြင့် `omniroute connect` အသုံးပြုခြင်း သို့မဟုတ် login ပိတ်ထားသော instance တစ်ခုမှတစ်ဆင့် ဖြစ်သည်။ စက်သုံးအထောက်အထားများ (`admin` access token တစ်ခု သို့မဟုတ် `manage`/`admin` scope ပါသော API key တစ်ခု) သည် `write` နှင့် `read` တိုကင်များကိုသာ ဖန်တီးနိုင်သည်။ ၎င်းတို့ကို `--scope admin` တောင်းဆိုပါက `403` ကို ပြန်ပေးသည်။
-
-တိုကင်တစ်ခုကို ဖန်တီးသူ၏ လုပ်ပိုင်ခွင့်ထက် ပိုသော လုပ်ပိုင်ခွင့်ဖြင့် မည်သည့်အခါမျှ ဖန်တီး၍မရပါ။ `admin` တိုကင်ကို စနစ်တာဝန်ခံသာ ဖန်တီးနိုင်သည်။ ဒက်ရှ်ဘုတ် session၊ ဆာဗာပေါ်ရှိ ဒေသတွင်း CLI၊ စကားဝှက်နှင့်အတူ `omniroute connect` သို့မဟုတ် အကောင့်ဝင်ခြင်းကို ပိတ်ထားသော instance မှတစ်ဆင့် ဖန်တီးနိုင်သည်။ စက်၏ အထောက်အထားများ (`admin` အသုံးပြုခွင့်တိုကင် သို့မဟုတ် `manage`/`admin` နယ်ပယ်ရှိ API သော့) သည် `write` နှင့် `read` တိုကင်များကိုသာ ဖန်တီးနိုင်ပြီး ၎င်းတို့ဖြင့် `--scope admin` တောင်းဆိုလျှင် `403` ပြန်ရသည်။
+Token ကို ဖန်တီးသူ ထားရှိသော privilege ထက် ပိုမိုသော privilege ဖြင့် ဘယ်တော့မှ ထုတ်ပေးနိုင်မည် မဟုတ်ပါ။ `admin` token ကို operator သာလျှင် ဖန်တီးနိုင်သည် — dashboard session၊ server ပေါ်ရှိ local CLI၊ သို့မဟုတ် password ဖြင့် `omniroute connect`။ Machine credential များ (`admin` access token၊ သို့မဟုတ် `manage`/`admin` scope ပါသော API key) သည် `write` နှင့် `read` token များကိုသာ ထုတ်နိုင်သည်; ၎င်းတို့က `--scope admin` တောင်းပါက `403` ပြန်ရသည်။ Login ပိတ်ခြင်းက token ထုတ်ခွင့်ကို မဖွင့်ပေးပါ — မည်သည့် scope ရှိ access token မဆို always-authenticated route များက လက်ခံသော credential ဖြစ်သောကြောင့် အမည်မသိ ခေါ်ဆိုမှုသည် မည်သည့် scope တွင်မဆို `401` ရရှိသည်။
 
 ---
 
-## အဝေးထိန်း catalog မှ coding CLI တစ်ခုကို စီစဉ်သတ်မှတ်ခြင်း
+## Remote catalog မှ coding CLI ကို ပြင်ဆင်ခြင်း
 
-`omniroute configure` သည် **လက်ရှိအသုံးပြုနေသော server ၏** live model catalog ကို ဖတ်ရှုပြီး
-**သင့်** စက်ပေါ်တွင် config တစ်ခု ရေးသားပေးသည်။
+`omniroute configure` သည် **active server** ၏ live model catalog ကို ဖတ်ပြီး **သင့်** စက်တွင် config ကို ရေးသည်။
 
 ```bash
 omniroute configure codex
-#   ပံ့ပိုးသူများ: glm, kmc, ollamacloud, opencode-go, …
-#   ပံ့ပိုးသူ: glm
+#   Providers: glm, kmc, ollamacloud, opencode-go, …
+#   Provider: glm
 #   Model id: glm/glm-5.2
-#   ✔ ~/.codex/glm52.config.toml ကို ရေးသားပြီးပါပြီ
+#   ✔ ~/.codex/glm52.config.toml ကို ရေးပြီးပါပြီ
 #   အသုံးပြုရန်:  codex --profile glm52
 
-# interactive မဟုတ်သောပုံစံ
+# non-interactive
 omniroute configure codex --provider glm --model glm/glm-5.2 --name glm52
 
-# မကြာခဏအသုံးပြုသော model တစ်ခုကို interactive ရွေးချယ်မှုစာရင်း၏ ထိပ်ဆုံးတွင်ထားရန်
+# မကြာခဏ သုံးသော model ကို interactive picker ထိပ်တွင် ထားရန်
 omniroute configure codex --provider glm --model glm/glm-5.2 --favorite --yes
 ```
 
-ရွေးချယ်မှုစနစ်သည် local `model-preferences.json` ဖိုင်အတွင်း context နှင့် CLI target
-အလိုက် model ID များကိုသာ သိမ်းဆည်းသည် (URL များ သို့မဟုတ် အထောက်အထားများကို လုံးဝမသိမ်းဆည်းပါ)။
-အနှစ်သက်ဆုံးများကို မကြာသေးမီက ရွေးချယ်ထားမှုများမတိုင်မီ ပြသသည်။ ရွေးချယ်ထားသော model ကို
-ထို context/target စာရင်းမှ ဖယ်ရှားရန် `--unfavorite` ကို အသုံးပြုပါ။
+Picker သည် model ID များသာ (URL သို့မဟုတ် credential ဘယ်တော့မှ မဟုတ်) ကို context နှင့် CLI target အလိုက် ခွဲထားသော local `model-preferences.json` ဖိုင်တွင် သိမ်းသည်။ Favorite များကို recent selection များထက် အရင်ပြသည်; ထို context/target list မှ ရွေးထားသော model ကို ဖယ်ရှားရန် `--unfavorite` ကို သုံးပါ။
 
-ရေးသားထားသော profile သည် inference key ကို env var
-(`OMNIROUTE_API_KEY`) ဖြင့် ရည်ညွှန်းထားသည် — လျှို့ဝှက်အချက်အလက်ကို disk သို့ လုံးဝမရေးသားပါ။
-တစ်ကြိမ်သာပြုလုပ်ရမည့် အခြေခံ Codex setup (`[model_providers.omniroute]` block) အတွက်
-[CODEX-CLI-CONFIGURATION.md](./CODEX-CLI-CONFIGURATION.md) ကို ကြည့်ပါ။
+ရေးထားသော profile သည် inference key ကို env var (`OMNIROUTE_API_KEY`) ဖြင့် ရည်ညွှန်းသည် — secret ကို disk ပေါ်တွင် ဘယ်တော့မှ မရေးပါ။ Codex ၏ အကြိမ်တစ်ကြိမ်တည်းသော base setup (`[model_providers.omniroute]` block) အတွက်တော့ [CODEX-CLI-CONFIGURATION.md](./CODEX-CLI-CONFIGURATION.md) ကို ကြည့်ပါ။
 
-### Config မရေးဘဲ အဝေးထိန်းစနစ်နှင့် ချိတ်ဆက်၍ CLI ကို စတင်ခြင်း
+### Config မရေးဘဲ remote သို့ CLI ကို စတင်ခြင်း
 
-`omniroute run <target>` သည်လည်း လက်ရှိအသုံးပြုနေသော context ကို လိုက်နာသည်။ အဝေးထိန်း
-base URL နှင့် context အထောက်အထားကို စတင်ဖွင့်လှစ်ထားသော process အတွင်းသို့သာ ထည့်သွင်းပေးသည်။
+`omniroute run <target>` သည် active context ကိုလည်း လေးစားသည်: remote base URL နှင့် context credential ကို စတင်လိုက်သော process ထဲသို့သာ inject လုပ်သည်။
 
 ```bash
 omniroute connect 192.168.0.15
-omniroute run claude   --model openai/gpt-5.4          # Claude Code → အဝေးထိန်း
+omniroute run claude   --model openai/gpt-5.4          # Claude Code → remote
 omniroute run gemini   --model glm/glm-5.2 -- --skip-trust -p "hello"
 omniroute run opencode --model glm/glm-5.2 -- run "reply OK"
 
-# မည်သည့်အရာကို အတိအကျ စတင်ဖွင့်လှစ်မည်ဖြစ်ကြောင်း အစမ်းကြည့်ရန် (env KEY အမည်များသာ၊ value များကို လုံးဝမပြပါ):
+# မစတင်မီ ဘာတွေ စတင်မည်ကို အတိအကျ ကြည့်ရန် (env KEY အမည်များသာ၊ တန်ဖိုးများ မဟုတ်)။
 omniroute run codex --dry-run --json
 ```
 
-Target များမှာ `claude`, `codex`, `aider`, `goose`, `opencode`, `qwen`, `gemini`
-တို့ဖြစ်သည် (တစ်ခုတည်းသော source: `bin/cli/cli-manifest.mjs`)။ Qwen နှင့် Gemini တို့သည်
-ထွက်သည့်အခါ ဖယ်ရှားပစ်မည့် သီးခြားယာယီ home ဖြင့် လုပ်ဆောင်သောကြောင့် စတင်ဖွင့်လှစ်မှုသည်
-သင့်ကိုယ်ပိုင် tool configuration ကို မထိခိုက်သကဲ့သို့ ၎င်းအတွင်းသို့လည်း အချက်အလက်များ
-ပေါက်ကြားဝင်ရောက်ခြင်းမရှိပါ။
+Target များ: `claude`၊ `codex`၊ `aider`၊ `goose`၊ `opencode`၊ `qwen`၊ `gemini` (တစ်ခုတည်းသော source: `bin/cli/cli-manifest.mjs`)။ Qwen နှင့် Gemini ကို ထွက်သည်နှင့် ဖျက်ပစ်သော ယာယီ isolated home ဖြင့် run လုပ်သည်၊ ထို့ကြောင့် launch သည် သင့်ကိုယ်ပိုင် tool config ကို ဘယ်တော့မှ မထိ၊ မယိုစိမ့်ပါ။
 
-### CLI တစ်ခုချင်းစီအလိုက် setup command များ
+### CLI တစ်ခုစီအတွက် setup command များ
 
-ပံ့ပိုးထားသော CLI တစ်ခုချင်းစီတွင် အဝေးထိန်းစနစ်ကို သိရှိအသုံးပြုနိုင်သည့် setup command တစ်ခုစီ
-ရှိသည် (အားလုံးသည် လက်ရှိအသုံးပြုနေသော context သို့မဟုတ်
-`--remote <url> --api-key <key>` ကို လိုက်နာသည်)။
+ထောက်ပံ့သော CLI တစ်ခုစီတွင် remote-aware setup command ရှိသည် (အားလုံးက active context ကို လေးစားသည်၊ သို့မဟုတ် `--remote <url> --api-key <key>`):
 
-| CLI         | Command                    | ရေးသားသည့်အရာ                                                                                                                                                                           |
-| ----------- | -------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Codex       | `omniroute setup-codex`    | `~/.codex/<name>.config.toml` profile များ (model တစ်ခုစီအလိုက်)                                                                                                                        |
-| Claude Code | `omniroute setup-claude`   | `~/.claude/profiles/<name>/settings.json` (model တစ်ခုစီအလိုက်)                                                                                                                         |
-| OpenCode    | `omniroute setup-opencode` | catalog model အားလုံးပါဝင်သော `omniroute` openai-compatible provider အတွက် `~/.config/opencode/opencode.json` (`opencode -m omniroute/<model>` ကို လုပ်ဆောင်ပါ)                         |
-| Cline       | `omniroute setup-cline`    | `~/.cline/data/{globalState,secrets}.json` (CLI mode) + ကူးထည့်ရန် VS Code extension setting များကို ပြသသည် (OpenAI-compatible၊ `/v1` **မပါသော** Base URL)                              |
-| Kilo Code   | `omniroute setup-kilo`     | `~/.local/share/kilo/auth.json` (CLI) + VS Code `kilocode.*` setting များ — OpenAI-compatible၊ `/v1` **ပါသော** Base URL                                                                 |
-| Continue    | `omniroute setup-continue` | `~/.continue/config.yaml` (VS Code/JetBrains + `cn` CLI) — `provider: openai`၊ `/v1` **ပါသော** `apiBase`၊ `${{ secrets.OMNIROUTE_API_KEY }}` မှတစ်ဆင့် key                              |
-| Cursor      | `omniroute setup-cursor`   | app အတွင်း လုပ်ဆောင်ရမည့်အဆင့်များကို ပြသသည် (Settings → Models → `/v1` **ပါသော** Override OpenAI Base URL + key + model)။ Cursor config သည် opaque SQLite ဖြစ်သည် — chat panel အတွက်သာ |
-| Roo Code    | `omniroute setup-roo`      | Roo import JSON (`~/.omniroute/roo-settings.json`) ကို ရေးသားပြီး `roo-cline.autoImportSettingsPath` ကို သတ်မှတ်ကာ UI အဆင့်များကို ပြသသည် (OpenAI-compatible၊ `/v1` **ပါသော** Base URL) |
-| Crush       | `omniroute setup-crush`    | `~/.config/crush/crush.json` — `openai-compat` provider၊ `/v1` **ပါသော** `base_url`၊ `$OMNIROUTE_API_KEY` မှတစ်ဆင့် key                                                                 |
-| Zed         | `omniroute setup-zed`      | `~/.config/zed/settings.json` — `language_models.openai_compatible.omniroute`၊ `/v1` **ပါသော** `api_url`၊ Zed က `$OMNIROUTE_API_KEY` မှ key ကို ဖတ်ယူသည် (လုံးဝမရေးသားပါ)               |
-| Goose       | `omniroute setup-goose`    | `~/.config/goose/config.yaml` (`GOOSE_PROVIDER=openai` + `/v1` **မပါသော** `OPENAI_HOST` + `GOOSE_MODEL`) + env လုပ်ဆောင်နည်း                                                            |
-| Aider       | `omniroute setup-aider`    | `~/.aider.conf.yml` (`/v1` **မပါသော** `openai-api-base` + `model: openai/<id>`) + env လုပ်ဆောင်နည်း (`aider --message --yes`)                                                           |
-| Qwen Code   | `omniroute setup-qwen`     | `~/.qwen/settings.json` V4 `modelProviders.openai` entry + `~/.qwen/.env` အတွင်းရှိ `OMNIROUTE_API_KEY`                                                                                 |
+| CLI         | Command                    | ရေးသားသည့်အရာ                                                                                                                                                                                     |
+| ----------- | -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Codex       | `omniroute setup-codex`    | `~/.codex/<name>.config.toml` profile များ (model တစ်ခုစီအလိုက်)                                                                                                                                  |
+| Claude Code | `omniroute setup-claude`   | `~/.claude/profiles/<name>/settings.json` (model တစ်ခုစီအလိုက်)                                                                                                                                   |
+| OpenCode    | `omniroute setup-opencode` | `~/.config/opencode/opencode.json` — catalog model အားလုံးပါသော `omniroute` openai-compatible provider (`opencode -m omniroute/<model>` ဖြင့် run ပါ)                                             |
+| Cline       | `omniroute setup-cline`    | `~/.cline/data/{globalState,secrets}.json` (CLI mode) + ကူးထည့်ရန် VS Code extension settings ကို ပြသသည် (OpenAI-compatible၊ Base URL **`/v1` မပါဘဲ**)                                            |
+| Kilo Code   | `omniroute setup-kilo`     | `~/.local/share/kilo/auth.json` (CLI) + VS Code `kilocode.*` settings — OpenAI-compatible၊ Base URL **`/v1` ပါဝင်ခြင်းဖြင့်**                                                                     |
+| Continue    | `omniroute setup-continue` | `~/.continue/config.yaml` (VS Code/JetBrains + `cn` CLI) — `provider: openai`၊ `apiBase` **`/v1` ပါဝင်ခြင်းဖြင့်**၊ key ကို `${{ secrets.OMNIROUTE_API_KEY }}` ဖြင့်                              |
+| Cursor      | `omniroute setup-cursor`   | in-app အဆင့်များကို ပြသသည် (Settings → Models → Override OpenAI Base URL **`/v1` ပါဝင်ခြင်းဖြင့်** + key + model)။ Cursor config သည် opaque SQLite ဖြစ်သည် — chat panel သာ                        |
+| Roo Code    | `omniroute setup-roo`      | Roo import JSON ကို ရေးသည် (`~/.omniroute/roo-settings.json`) + `roo-cline.autoImportSettingsPath` ကို သတ်မှတ်ပြီး UI အဆင့်များကို ပြသသည် (OpenAI-compatible၊ Base URL **`/v1` ပါဝင်ခြင်းဖြင့်**) |
+| Crush       | `omniroute setup-crush`    | `~/.config/crush/crush.json` — `openai-compat` provider၊ `base_url` **`/v1` ပါဝင်ခြင်းဖြင့်**၊ key ကို `$OMNIROUTE_API_KEY` ဖြင့်                                                                 |
+| Zed         | `omniroute setup-zed`      | `~/.config/zed/settings.json` — `language_models.openai_compatible.omniroute`၊ `api_url` **`/v1` ပါဝင်ခြင်းဖြင့်**၊ key ကို Zed က `$OMNIROUTE_API_KEY` မှ ဖတ်သည် (ဘယ်တော့မှ မရေးပါ)               |
+| Goose       | `omniroute setup-goose`    | `~/.config/goose/config.yaml` (`GOOSE_PROVIDER=openai` + `OPENAI_HOST` **`/v1` မပါဘဲ** + `GOOSE_MODEL`) + env recipe                                                                              |
+| Aider       | `omniroute setup-aider`    | `~/.aider.conf.yml` (`openai-api-base` **`/v1` မပါဘဲ** + `model: openai/<id>`) + env recipe (`aider --message --yes`)                                                                             |
+| Qwen Code   | `omniroute setup-qwen`     | `~/.qwen/settings.json` V4 `modelProviders.openai` entry + `~/.qwen/.env` ထဲတွင် `OMNIROUTE_API_KEY`                                                                                              |
 
 ```bash
-# OpenCode (openai-compatible provider၊ catalog model အားလုံး၊ အဝေးထိန်း VPS)
+# OpenCode (openai-compatible provider၊ catalog model အားလုံး၊ remote VPS)
 omniroute setup-opencode --remote http://192.168.0.15:20128 --api-key oma_live_xxx
-omniroute setup-opencode --only glm,kimi        # ကိုက်ညီသော model များကိုသာ ထားရှိရန်
-opencode -m omniroute/glm/glm-5.2 "..."          # OMNIROUTE_API_KEY ကို ဦးစွာ export လုပ်ပါ
+omniroute setup-opencode --only glm,kimi        # ကိုက်ညီသော model များကိုသာ ထားရန်
+opencode -m omniroute/glm/glm-5.2 "..."          # ဦးစွာ OMNIROUTE_API_KEY ကို export လုပ်ပါ
 ```
 
-> OpenCode တွင် ပိုမိုစုံလင်သော **plugin** ချိတ်ဆက်မှုလည်း ရှိပါသည်- `omniroute setup opencode`
-> (`--remote` မှတစ်ဆင့် အဝေးထိန်းစနစ်ကိုလည်း ယခု ပံ့ပိုးထားသည်) သည် `@omniroute/opencode-plugin` ကို ထည့်သွင်းပေးပါသည်။
-> `setup-opencode` သည် ပေါ့ပါးသော openai-compatible အစားထိုးရွေးချယ်စရာ ဖြစ်ပါသည်။ API key ကို
-> `{env:OMNIROUTE_API_KEY}` မှတစ်ဆင့် ကိုးကားအသုံးပြုထားပြီး — disk သို့ မည်သည့်အခါမျှ ရေးသားသိမ်းဆည်းခြင်းမရှိပါ။
+---
+
+> OpenCode တွင် ပိုကြွယ်ဝသော **plugin** ပေါင်းစပ်မှုလည်း ရှိသည်: `omniroute setup opencode` (ယခု `--remote` ဖြင့် remote-aware ဖြစ်သည်) သည် `@omniroute/opencode-plugin` ကို ထည့်သွင်းသည်။
+> `setup-opencode` သည် ပေါ့ပါးသော openai-compatible အစားထိုးနည်းဖြစ်သည်။ API key ကို `{env:OMNIROUTE_API_KEY}` ဖြင့် ရည်ညွှန်းပြီး ဘယ်တော့မှ disk ပေါ်တွင် မရေးပါ။
 >
-> OpenCode v2 တွင် ယင်းအစား `@omniroute/opencode-plugin-v2` ကို အသုံးပြုပါ- catalog တူညီသော်လည်း
-> loader contract ကွဲပြားပါသည်။ ချိတ်ဆက်မှုကို ဆက်သွယ်ပြီးသောအခါ ၎င်းသည် OpenCode ၏ ကိုယ်ပိုင် credential
-> store မှ key ကို ဖတ်ယူသောကြောင့် remote gateway အတွက် `opencode.json` ထဲတွင်
-> key လုံးဝမလိုအပ်ပါ။
+> OpenCode v2 တွင် `@omniroute/opencode-plugin-v2` ကို အစားသုံးပါ: catalog တူညီသော်လည်း loader contract မတူပါ။ ၎င်းသည် ပေါင်းစပ်မှု ချိတ်ဆက်ထားသောအခါ OpenCode ၏ကိုယ်ပိုင် credential store မှ key ကို ဖတ်ပြီး ထို့ကြောင့် remote gateway သည် `opencode.json` တွင် key မလိုအပ်ပါ။
 
 ---
 

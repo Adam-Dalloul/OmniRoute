@@ -15,123 +15,57 @@ OmniRoute ina bomba la uidhinishaji linalozingatia njia ambalo huzuia kila ombi 
 
 ## Njia Mbili za Uthibitishaji
 
-### 1. Ufunguo wa API (Bearer)
+### 1. API Key (Bearer)
 
-Hutumika kwa API za mteja zinazooana na OpenAI/Anthropic/Gemini na baadhi ya njia za usimamizi wakati ufunguo una ruhusa ya `manage`.
+Inatumika kwa API za wateja zinazooana na OpenAI/Anthropic/Gemini na kwa baadhi ya njia za usimamizi wakati ufunguo una wigo wa `manage`.
 
 ```
 Authorization: Bearer <api-key>
 ```
 
-Huthibitishwa na `isValidApiKey()` / `extractApiKey()` katika `src/sse/services/auth.ts` na kusafirishwa upya kupitia `src/shared/utils/apiAuth.ts`. Kithibitishaji pia hukubali env vars za `OMNIROUTE_API_KEY` / `ROUTER_API_KEY` kama funguo endelevu za kupitisha moja kwa moja (suala #1350).
+Inathibitishwa na `isValidApiKey()` / `extractApiKey()` katika `src/sse/services/auth.ts` na inasafirishwa tena kupitia `src/shared/utils/apiAuth.ts`. Kithibitishaji pia kinakubali env vars za `OMNIROUTE_API_KEY` / `ROUTER_API_KEY` kama funguo za kupitisha za kudumu (issue #1350).
 
-### 2. Kikao cha Dashibodi (kidakuzi cha auth_token)
+### 2. Kipindi cha Dashboard (auth_token cookie)
 
-Kwa kurasa za dashibodi na operesheni za msimamizi.
+Kwa kurasa za dashboard na shughuli za msimamizi.
 
 ```
-Cookie: auth_token=<JWT iliyotiwa saini kwa JWT_SECRET>
+Cookie: auth_token=<JWT signed with JWT_SECRET>
 ```
 
-Kidakuzi ni kikao ikiwa tu JWT imethibitishwa **na** ina `authenticated: true`
-(`src/shared/utils/dashboardSessionToken.ts` → `verifyDashboardSessionToken`). Kila
-mtumiaji wa kidakuzi hicho (kilinzi cha njia ya dashibodi (`isDashboardSessionAuthenticated()`), uonyeshaji upya wa mchakato wa authz, makubaliano ya WebSocket, seva ya moja kwa moja, `/api/settings/require-login`, `/api/auth/status`) hupitia kisaidizi hicho.
-JWT nyingine zilizotiwa saini kwa `JWT_SECRET` zipo — kipitishaji cha Cursor CLI hutengeneza tokeni za
-`iss "omniroute" / aud "cursor-cli"` kwa wenye funguo — na kamwe si vikao
-(#13298).
+Kuki ni kipindi tu pale JWT inapothibitishwa **na** ina `authenticated: true` (`src/shared/utils/dashboardSessionToken.ts` → `verifyDashboardSessionToken`). Kila mtumiaji wa kuki (dashboard route guard (`isDashboardSessionAuthenticated()`), uhuishaji upya wa authz pipeline, WebSocket handshake, live server, `/api/settings/require-login`, `/api/auth/status`) hupitia msaidizi huyo.
+JWT nyingine zilizosainiwa kwa `JWT_SECRET` zipo: Cursor CLI passthrough hutengeneza tokens za `iss "omniroute" / aud "cursor-cli"` kwa wenye funguo, na hizo hazijawahi kuwa vipindi (#13298).
 
-Huthibitishwa na `isDashboardSessionAuthenticated()` katika `src/shared/utils/apiAuth.ts`. Mchakato huo huonyesha upya JWT kiotomatiki inapokuwa imebakiwa na chini ya siku 7 katika muda wake wa matumizi wa siku 30.
+Inathibitishwa na `isDashboardSessionAuthenticated()` katika `src/shared/utils/apiAuth.ts`. Pipeline inahuisha JWT kiotomatiki pale inapobaki chini ya siku 7 kati ya maisha yake ya siku 30.
 
-Kikao kinaweza pia kuisha kabla ya siku zake 30 kukamilika, kwa sababu kila kitengeneza tokeni hupitia `mintDashboardSessionToken` (muda wa kutolewa `iat` na kitambulisho `jti`) na kithibitishaji hukagua mipangilio miwili: `sessionsValidAfter`, ambayo huwekwa baada ya nenosiri kubadilishwa ili kila kikao kilichotolewa kabla ya hapo kisiendelee kuthibitishwa (kivinjari kilichobadilisha nenosiri hupata kidakuzi kipya), na `revokedDashboardSessions`, ambako `POST /api/auth/logout` huongeza `jti` ya kikao kilichotolewa. Vikao vilivyotengenezwa na toleo la zamani havina dai lolote kati ya hayo na huendelea kuwa halali hadi nenosiri libadilishwe kwa mara ya kwanza. Ikiwa mipangilio haiwezi kusomwa, kikao hakiaminiki.
+Kipindi kinaweza kuisha kabla ya siku zake 30 kukamilika, kwa sababu kila mtengenezaji hupitia `mintDashboardSessionToken` (muda wa kutolewa `iat` na kitambulisho `jti`), na kithibitishaji kinakagua mipangilio miwili: `sessionsValidAfter`, inayowekwa na mabadiliko ya nenosiri ili kila kipindi kilichotolewa kabla yake kisithibitike tena (kivinjari kilichobadilisha nenosiri kinapata kuki mpya), na `revokedDashboardSessions`, ambayo `POST /api/auth/logout` huongeza `jti` ya kipindi kilichotoka. Vipindi vilivyotengenezwa na toleo la zamani havina dai lolote kati ya hayo mawili na vinabaki halali hadi mabadiliko ya kwanza ya nenosiri. Mipangilio ikishindwa kusomwa, kipindi hakiaminiwi.
 
-Baadhi ya njia za usimamizi hukubali **mojawapo** ya njia hizi: kidakuzi AU `Bearer <key>` wakati ufunguo wa API una ruhusa ya `manage` (au `admin`). Hili ndilo linalowezesha mtiririko wa kazi wa "kuweza kusanidiwa kupitia miito ya API" ulioongezwa katika v3.8.
+Baadhi ya njia za usimamizi zinakubali **mojawapo ya** njia mbili: kuki AU `Bearer <key>` wakati ufunguo wa API una wigo wa `manage` (au `admin`). Hii ndiyo inayowezesha mtiririko wa "unaoweza kusanidiwa kupitia API calls" uliongezwa katika v3.8.
 
-#### Kizuizi cha hiari cha kuingia kwa OIDC (#6973)
+#### Hiari ya kuingia kwa OIDC (#6973)
 
-Kuingia kwa msimamizi wa dashibodi pia kunaauni mtiririko wa **hiari** wa OIDC (OpenID Connect)
-pamoja na uingiaji chaguomsingi kwa nenosiri — uingiaji kwa nenosiri hauondolewi kamwe, bali
-huongezewa tu:
+Kuingia kwa msimamizi wa dashboard pia kunaunga mkono mtiririko wa **hiari** wa OIDC (OpenID Connect) pamoja na kuingia kwa nenosiri la kawaida. Kuingia kwa nenosiri hakuondolewi kamwe, kinaongezewa tu:
 
-- Imezimwa isipokuwa `settings.oidcEnabled === true` **na** `oidcIssuer` /
-  `oidcClientId` / `oidcClientSecret` zote zimesanidiwa (Mipangilio → Uthibitishaji).
-  Vinginevyo, `GET /api/auth/oidc/login` hurejesha `400`.
-- `GET /api/auth/oidc/login` hugundua `authorization_endpoint` kutoka kwenye
-  `/.well-known/openid-configuration` ya mtoaji (na hutumia
-  `<issuer>/authorize` kama mbadala), huunda URI ya kuelekezwa upya kutoka kwenye ombi
-  linaloingia (kwa kuzingatia `x-forwarded-proto`), na huelekeza upya kwenda kwa IdP ikiwa na `state`
-  ya nasibu iliyohifadhiwa kwenye kidakuzi cha `httpOnly` cha `oidc_state`.
-- `GET /api/auth/oidc/callback` huthibitisha `state`, hubadilisha msimbo wa uidhinishaji,
-  na huthibitisha saini ya tokeni ya ID kupitia JWKS ya mtoaji
-  (`createRemoteJWKSet` ya `jose`, iliyohifadhiwa kwenye akiba kwa kila URI ya JWKS) pamoja na ukaguzi wa `issuer`/`audience`.
-  Orodha ya wanaoruhusiwa ya `oidcAllowedSubjects` inahitajika: inalinganisha
-  dai la `sub` la tokeni au dai lake la `email` — dai la barua pepe linakubaliwa tu
-  wakati `email_verified === true`, kwa hivyo barua pepe ambayo haijathibitishwa katika IdP haiwezi kamwe
-  kupita kizuizi — na bila maingizo, mwito wa kurejea hukataa kila jaribio la kuingia
-  (`not_configured`).
-- Ikifaulu, huunda JWT ya `auth_token` ya siku 30 ambayo ni **sawa kabisa** na ile inayotolewa na
-  kuingia kwa nenosiri (`src/app/api/auth/login/route.ts`), hivyo sehemu nyingine ya
-  mchakato wa kipindi cha dashibodi (uonyeshaji upya kiotomatiki, bendera za vidakuzi) haibadiliki —
-  OIDC hubadilisha tu jinsi kidakuzi kinavyoundwa, si kile kinachoruhusu.
-- Kila mpangilio wa `oidc*` (`oidcEnabled`, `oidcDisablePasswordLogin`,
-  `oidcIssuer`, `oidcClientId`, `oidcClientSecret`, `oidcAllowedSubjects`,
-  `oidcRedirectPath`, `oidcScopes`) umo katika `SECURITY_IMPACTING_SETTINGS_KEYS`
-  (`src/shared/constants/securityImpactingSettings.ts`): `PATCH /api/settings`
-  hujibu `400 PASSWORD_REQUIRED` isipokuwa mwili una nenosiri la usimamizi
-  kama `currentPassword` (`401 PASSWORD_MISMATCH` likiwa si sahihi).
-  `oidcDisablePasswordLogin` hukataa _kuingia_ kwa nenosiri (`POST /api/auth/login`)
-  lakini huhifadhi heshi ya nenosiri, na uthibitishaji upya bado hukagua
-  `currentPassword` dhidi yake.
-- `corsOrigins` na `bruteForceProtection` pia zimo katika `SECURITY_IMPACTING_SETTINGS_KEYS`:
-  kulegeza mojawapo hudhoofisha ulinzi wa kuingia, kwa hivyo zinahitaji uthibitishaji upya uleule wa
-  `currentPassword` (kichupo cha Usalama huomba nenosiri hilo), na uletaji wa JSON
-  huziondoa.
-- Kila ufunguo wa sera ya usalama — maingizo ya `SECURITY_IMPACTING_SETTINGS_KEYS`,
-  kila ufunguo wa `oidc*` na hali ya kipindi cha dashibodi — ni wa **mwendeshaji pekee** kwenye
-  `PATCH /api/settings`: ufunguo wa API wenye wigo wa `manage` au tokeni ya ufikiaji ya `oma_`
-  hukataliwa kwa `403` hata inapotuma `currentPassword` sahihi, na
-  kukataliwa huko hurekodiwa katika ukaguzi kama `settings.update_failed` ikiwa na `reason: OPERATOR_REQUIRED`
-  (`requireOperatorCredential()` katika `src/lib/api/operatorCredential.ts`).
-  Mipangilio ya kawaida (mandhari, mapendeleo ya mwonekano) huendelea kuweza kuandikwa na ufunguo wa `manage`
-  au tokeni ya ufikiaji ya `admin`. Kila badiliko la `/api/settings` lenyewe (na la
-  `/api/settings/require-login`) pia linahitaji wigo wa tokeni ya ufikiaji wa `admin`
-  (`ADMIN_MUTATION_EXACT_PATHS` katika `src/server/authz/accessScopes.ts`, ulinganishaji
-  kamili wa njia); `GET` huendelea kuwa `read`, na njia nyingine ndogo za `/api/settings/*` (proksi,
-  chaguo-msingi za mchanganyiko, lakabu za miundo, mgandamizo, ufutaji…) huhifadhi wigo wa
-  `write` unaobainishwa kutokana na mbinu.
-- `POST /api/settings/import-json` huruka uthibitishaji huo upya, kwa hivyo huondoa kila ufunguo katika
-  `IMPORT_STRIPPED_SETTINGS_KEYS` (faili hiyo hiyo) kabla ya kuandika: nenosiri na
-  `currentPassword`, kila ingizo la `SECURITY_IMPACTING_SETTINGS_KEYS`, na
-  hali ya kipindi cha dashibodi (`sessionsValidAfter`, `revokedDashboardSessions`).
-  Kwa hivyo, kuleta nakala rudufu ya zamani hakuwezi kufufua kipindi ambacho mabadiliko ya nenosiri
-  au kutoka tayari yalikomesha.
+- Imezimwa isipokuwa `settings.oidcEnabled === true` **na** `oidcIssuer` / `oidcClientId` / `oidcClientSecret` zote zimesanidiwa (Settings → Auth). `GET /api/auth/oidc/login` hurudisha `400` vinginevyo.
+- `GET /api/auth/oidc/login` hugundua `authorization_endpoint` kutoka `/.well-known/openid-configuration` ya issuer (inarudi kwa `<issuer>/authorize`), hujenga redirect URI kutoka kwenye ombi linaloingia (inazingatia `x-forwarded-proto`), na kuelekeza kwa IdP ikiwa na `state` ya nasibu iliyohifadhiwa kwenye kuki ya `httpOnly` ya `oidc_state`.
+- `GET /api/auth/oidc/callback` huthibitisha `state`, hubadilisha authorization code, na huhakiki sahihi ya ID token kupitia JWKS ya issuer (`createRemoteJWKSet` ya `jose`, imehifadhiwa kwa kila JWKS URI) pamoja na ukaguzi wa `issuer`/`audience`. Orodha ya `oidcAllowedSubjects` inahitajika: inalinganisha dai la `sub` la token au dai lake la `email`. Dai la email linakubaliwa tu pale `email_verified === true`, kwa hiyo barua pepe isiyothibitishwa kwa IdP haiwezi kamwe kupita lango. Bila maingizo yoyote, callback inakataa kila kuingia (`not_configured`).
+- Ikifanikiwa, hutengeneza **JWT ile ile kabisa** ya `auth_token` ya siku 30 ambayo kuingia kwa nenosiri hutoa (`src/app/api/auth/login/route.ts`), kwa hiyo pipeline nyingine ya kipindi cha dashboard (uhuishaji wa kiotomatiki, bendera za kuki) haibadiliki. OIDC inabadilisha tu jinsi kuki inavyotengenezwa, si kile inachokipa.
+- Kila mpangilio wa `oidc*` (`oidcEnabled`, `oidcDisablePasswordLogin`, `oidcIssuer`, `oidcClientId`, `oidcClientSecret`, `oidcAllowedSubjects`, `oidcRedirectPath`, `oidcScopes`) uko katika `SECURITY_IMPACTING_SETTINGS_KEYS` (`src/shared/constants/securityImpactingSettings.ts`): `PATCH /api/settings` hujibu `400 PASSWORD_REQUIRED` isipokuwa mwili wa ombi ubebe nenosiri la usimamizi kama `currentPassword` (`401 PASSWORD_MISMATCH` likiwa si sahihi). `oidcDisablePasswordLogin` inakataa _kuingia_ kwa nenosiri (`POST /api/auth/login`) lakini inahifadhi hash ya nenosiri iliyopo, na re-auth bado inakagua `currentPassword` dhidi yake.
+- `corsOrigins` na `bruteForceProtection` pia ziko katika `SECURITY_IMPACTING_SETTINGS_KEYS`: kulegeza yoyote kati ya hizo kunadhoofisha ulinzi wa kuingia, kwa hiyo zinahitaji re-auth ile ile ya `currentPassword` (Security tab inaiomba) na uingizaji wa JSON unaziondoa.
+- Kila ufunguo wa sera ya usalama (maingizo ya `SECURITY_IMPACTING_SETTINGS_KEYS`, kila ufunguo wa `oidc*`, na hali ya kipindi cha dashboard) ni **wa operator pekee** kwenye `PATCH /api/settings`: ufunguo wa API wenye wigo wa manage au access token ya `oma_` hukataliwa kwa `403` hata ukituma `currentPassword` sahihi, na kukataliwa huko kunakaguliwa kama `settings.update_failed` chenye `reason: OPERATOR_REQUIRED` (`requireOperatorCredential()` katika `src/lib/api/operatorCredential.ts`). Mipangilio ya kawaida (mandhari, mapendeleo ya onyesho) inabaki kuandikwa kwa ufunguo wa `manage` au access token ya `admin`. Kila mabadiliko ya `/api/settings` yenyewe (na ya `/api/settings/require-login`) pia yanahitaji wigo wa access token wa `admin` (`ADMIN_MUTATION_EXACT_PATHS` katika `src/server/authz/accessScopes.ts`, linganisho la njia kamili). `GET` inabaki `read`, na njia nyingine ndogo za `/api/settings/*` (proxies, combo defaults, model aliases, compression, purges…) zinabaki na wigo wa `write` unaotokana na mbinu ya ombi.
+- `POST /api/settings/import-json` inaruka re-auth hiyo, kwa hiyo inaondoa kila ufunguo katika `IMPORT_STRIPPED_SETTINGS_KEYS` (faili hiyohiyo) kabla ya kuandika: nenosiri na `currentPassword`, kila ingizo la `SECURITY_IMPACTING_SETTINGS_KEYS`, na hali ya kipindi cha dashboard (`sessionsValidAfter`, `revokedDashboardSessions`). Kwa hiyo kuingiza backup ya zamani hakuwezi kufufua kipindi ambacho mabadiliko ya nenosiri au kutoka kumekimaliza.
 
-## Madarasa ya Njia
+## Aina za Route
 
-`src/server/authz/types.ts` inafafanua madarasa matatu; njia yoyote ambayo haiwezi kuainishwa kwa uhakika huwekwa katika `MANAGEMENT`.
+`src/server/authz/types.ts` inafafanua madarasa matatu; route yoyote isiyoweza kuainishwa kwa uhakika inarudi kwenye `MANAGEMENT`.
 
-| Darasa       | Maelezo                                                                                                                                                       | Uthibitishaji unaohitajika                                                  |
-| ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
-| `PUBLIC`     | Njia zilizo salama waziwazi — kuingia, kutoka, hali, uanzishaji, afya, uanzishaji wa awali wa onboarding.                                                     | Hakuna                                                                      |
-| `CLIENT_API` | Endpoints za kuhudumia modeli — `/api/v1/*`, `/api/v1beta/*`, pamoja na alias `/v1/*`, `/v1beta/*`, `/chat/completions`, `/responses`, `/models`, `/codex/*`. | Ufunguo wa Bearer wakati feature flag husika ya `REQUIRE_API_KEY` imewashwa |
-| `MANAGEMENT` | Kurasa za dashibodi, mipangilio, watoa huduma, funguo, pamoja na endpoints za usimamizi na uchunguzi.                                                         | Kipindi cha dashibodi AU Bearer yenye scope ya `manage`                     |
+| Darasa       | Maelezo                                                                                                                                                            | Uthibitishaji unaohitajika                                                           |
+| ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------ |
+| `PUBLIC`     | Route salama waziwazi: kuingia, kutoka, hali, init, health, bootstrap ya onboarding.                                                                               | Hakuna                                                                               |
+| `CLIENT_API` | Vituo vya kuhudumia modeli: `/api/v1/*`, `/api/v1beta/*`, pamoja na majina mbadala `/v1/*`, `/v1beta/*`, `/chat/completions`, `/responses`, `/models`, `/codex/*`. | Ufunguo wa Bearer wakati feature flag ya `REQUIRE_API_KEY` inayofanya kazi imewashwa |
+| `MANAGEMENT` | Kurasa za dashboard, mipangilio, watoa huduma, funguo, vituo vya admin na uchunguzi.                                                                               | Kipindi cha dashboard AU Bearer yenye wigo wa `manage`                               |
 
-Vitendo vichache vya `MANAGEMENT` ni vya **opereta pekee**: ufunguo wa `manage` hautoshi. Kuhamisha nje vitambulisho
-vilivyohifadhiwa (`GET /api/settings/export-json`, `GET /api/db-backups/export`,
-`GET /api/db-backups/exportAll`), kurejesha nakala rudufu juu ya data inayotumika
-(`POST /api/db-backups/import` ikiwa ni pamoja na `dryRun=true`, urejeshaji wa `POST /api/db-backups` kwa kutumia id,
-`POST /api/settings/import-json`), kuharibu sehemu za kurejeshea (`DELETE /api/db-backups` kwa usafishaji,
-na `PATCH /api/db-backups` kwa sababu muda wa uhifadhi inaouhifadhi huendesha upogoaji wa kiotomatiki baada ya
-kila nakala rudufu), kutoa tokeni ya ulandanishi (`POST /api/sync/tokens`) na kutengeneza
-tokeni ya ufikiaji ya CLI ya `admin` (`POST /api/cli/tokens`) kunahitaji kipindi cha dashibodi, subject ya CLI
-ya ndani, au kuingia kuwe kumezimwa; funguo za API za scope yoyote na tokeni za ufikiaji za `oma_` hupata `403`. Ukaguzi
-upo katika `src/lib/api/operatorCredential.ts` (`resolveOperatorCredential()` /
-`requireOperatorCredential()`). Kubadilisha mipangilio ya kuingia pia ni kwa opereta pekee:
-`POST /api/settings/require-login` (kuweka nenosiri la usimamizi / kubadilisha `requireLogin`) hukubali
-vitambulisho hivyo pekee mara tu nenosiri linapokuwepo — dirisha la uanzishaji wa kwanza (wakati hakuna nenosiri bado)
-halijabadilika — na kipindi cha dashibodi lazima kitume `currentPassword` ili kubadilisha nenosiri
-(`403` ikiwa halipo au si sahihi, na tukio hilo hurekodiwa kama `settings.update_failed`). CLI ya ndani na
-instance ambayo kuingia kumezimwa huendelea kuwa na njia ya urejeshaji na zinaweza kuweka nenosiri bila hilo, kwa kuwa zote
-zimefungamanishwa na host inayomiliki saraka ya data.
+Vitendo kadhaa vya `MANAGEMENT` ni **vya operator pekee**: ufunguo wa `manage` hautoshi. Kusafirisha credentials zilizohifadhiwa (`GET /api/settings/export-json`, `GET /api/db-backups/export`, `GET /api/db-backups/exportAll`), kurejesha backup juu ya data hai (`POST /api/db-backups/import` ikiwemo `dryRun=true`, `POST /api/db-backups` restore kwa id, `POST /api/settings/import-json`), na kuharibu pointi za kurejesha (`DELETE /api/db-backups` cleanup, na `PATCH /api/db-backups` kwa sababu retention inayohifadhi ndiyo inayoendesha pruning ya kiotomatiki baada ya kila backup) vinahitaji kipindi cha dashboard, somo la CLI la ndani, au kuingia kukiwa kumezimwa. Kutoa sync token (`POST /api/sync/tokens`) na kutengeneza `admin` CLI access token (`POST /api/cli/tokens`) vinahitaji kipindi cha dashboard au somo la CLI la ndani katika kila hali ya kuingia. Funguo za API za wigo wowote na access tokens za `oma_` si credentials za operator: hupata `403` wakati wowote inapohitajika. Ukaguzi huu uko katika `src/lib/api/operatorCredential.ts` (`resolveOperatorCredential()` / `requireOperatorCredential()`). Kubadilisha mipangilio ya kuingia pia ni kwa operator pekee: `POST /api/settings/require-login` (kuweka nenosiri la usimamizi / kugeuza `requireLogin`) inakubali credentials hizo pekee mara nenosiri linapokuwepo. Dirisha la bootstrap la uendeshaji wa kwanza (bila nenosiri bado) halibadiliki, na kipindi cha dashboard lazima kituma `currentPassword` ili kubadilisha nenosiri (`403` pale kisipokuwepo au ni kibaya, na kinakaguliwa kama `settings.update_failed`). CLI ya ndani na instance yenye kuingia kumezimwa zinabaki na njia ya urejeshaji na zinaweza kuweka nenosiri bila hilo, kwa sababu zote mbili zimefungamana na host inayomiliki data directory.
 
 ## Msururu wa Uchakataji
 
@@ -284,15 +218,15 @@ kutatua wigo kutoka kwa maelezo ya uthibitishaji wa MCP, metadata ya ombi, au
 (`src/lib/accessTokens/scopes.ts`). Cheo hiki kinatumika tu kwa kitambulisho cha
 tokeni ya ufikiaji. Angalia [Uthibitishaji wa Usimamizi](../guides/MANAGEMENT-AUTH.md).
 
-## Kibadilishaji cha Uhitaji wa Uthibitishaji
+## Kigeuzi cha Uthibitishaji Unaohitajika
 
-`isAuthRequired()` katika `src/shared/utils/apiAuth.ts` huamua ikiwa uthibitishaji **wowote** unatekelezwa kwa ombi:
+`isAuthRequired()` katika `src/shared/utils/apiAuth.ts` ndiyo inayoamua kama uthibitishaji wowote unatekelezwa kwa ombi:
 
-- `settings.requireLogin === false` → uthibitishaji umezimwa kwa mfumo mzima.
-- Hakuna nenosiri lililosanidiwa **na** hakuna kigezo cha mazingira cha `INITIAL_PASSWORD` → hali ya uanzishaji huruhusu mchawi wa utambulishaji wa mwanzo na maombi ya loopback, lakini maombi yaliyowekwa wazi kwenye mtandao bado yanahitaji vitambulisho.
-- Hitilafu yoyote ya DB → hufunga ufikiaji (usalama kwa chaguo-msingi).
+- `settings.requireLogin === false` → uthibitishaji umezimwa kwa ujumla, isipokuwa ngazi ya ulinzi wa kudumu (tazama [Route Guard Tiers](../security/ROUTE_GUARD_TIERS.md)) na miito inayotoa credential inayokubaliwa nayo, ambayo inahitaji credential ile ile kama kuingia kukiwa kumewashwa: kutoa sync tokens, kutengeneza CLI access tokens kwa wigo wowote, na kuunda ufunguo wa API wenye wigo wa `manage`/`admin`, kutoa wigo huo kwa ufunguo, au kuzalisha upya au kuonyesha ufunguo wa aina hiyo (`requireCredentialForManagementScopedKey()` katika `src/lib/api/requireManagementAuth.ts`). Funguo za inference pekee zinabaki wazi.
+- Hakuna nenosiri lililosanidiwa **na** hakuna env var ya `INITIAL_PASSWORD` → hali ya bootstrap: inaruhusu onboarding wizard na maombi ya loopback, lakini maombi ya mtandao wa wazi bado yanahitaji credentials.
+- Hitilafu yoyote ya DB → inashindwa kwa kufunga (secure-by-default).
 
-Utekelezaji wa funguo za API za mteja hutumia `isRequireApiKeyEnabled()` katika `src/shared/utils/featureFlags.ts`, wala si usomaji wa moja kwa moja wa `process.env.REQUIRE_API_KEY`. Hili ni muhimu kwa matukio yaliyotumwa: kubadilisha `REQUIRE_API_KEY` katika Dashboard → Feature Flags huhifadhi ubatilishaji wa DB na huathiri mara moja `/v1/*`, `/v1beta/*`, `/models`, `/responses`, `/chat/completions`, `/codex/*`, na ukaguzi mwingine wa uthibitishaji wa API ya mteja unaotumia kisaidizi hiki. Ikiwa hifadhi ya alama za vipengele haiwezi kusomwa, uthibitishaji wa API ya mteja hufunga ufikiaji na kuhitaji funguo.
+Uthibitishaji wa ufunguo wa API wa mteja unatumia `isRequireApiKeyEnabled()` katika `src/shared/utils/featureFlags.ts`, si usomaji wa moja kwa moja wa `process.env.REQUIRE_API_KEY`. Hili ni muhimu kwa instances zilizosambazwa: kubadilisha `REQUIRE_API_KEY` katika Dashboard → Feature Flags kunahifadhi DB override na mara moja kunaathiri `/v1/*`, `/v1beta/*`, `/models`, `/responses`, `/chat/completions`, `/codex/*`, na ukaguzi mwingine wa uthibitishaji wa API ya mteja unaotumia msaidizi huyu. Ikiwa feature flag store haiwezi kusomwa, uthibitishaji wa API ya mteja unashindwa kwa kufunga na unadai ufunguo.
 
 ## Mabadiliko Yasiyooana — v3.8.0
 

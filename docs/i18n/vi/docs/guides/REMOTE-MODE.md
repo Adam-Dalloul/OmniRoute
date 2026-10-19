@@ -249,113 +249,89 @@ hiển thị là đang hoạt động.
 
 ```bash
 omniroute tokens create --name "laptop" --scope write [--expires 30]
-#   ↳ chỉ hiển thị khóa bí mật MỘT LẦN — hãy sao chép ngay
-omniroute tokens list                 # được che: id, tên, phạm vi, tiền tố, trạng thái, thời hạn
+#   ↳ in bí mật MỘT LẦN — hãy sao chép ngay
+omniroute tokens list                 # che bớt: id, tên, phạm vi, tiền tố, trạng thái, hạn dùng
 omniroute tokens revoke <id|prefix>   # thu hồi ngay lập tức
 omniroute tokens scopes               # giải thích ba phạm vi
 ```
 
-Các lệnh `tokens` yêu cầu thông tin xác thực **admin**. Bạn cũng có thể quản lý token trong
-bảng điều khiển tại **Settings → Access Tokens** (tạo, thu hồi, chỉ sao chép một lần).
+Các lệnh `tokens` yêu cầu thông tin xác thực **admin**. Bạn cũng có thể quản lý token trong dashboard tại **Settings → Access Tokens** (tạo, thu hồi, sao chép một lần).
 
-Một token không bao giờ có thể được cấp với đặc quyền cao hơn đặc quyền của đối tượng tạo ra nó. Token
-`admin` chỉ có thể được tạo bởi người vận hành — phiên bảng điều khiển,
-CLI cục bộ ngay trên máy chủ, `omniroute connect` kèm mật khẩu, hoặc một
-phiên bản đã tắt đăng nhập. Thông tin xác thực máy (token truy cập `admin`
-hoặc khóa API có phạm vi `manage`/`admin`) chỉ có thể cấp token `write` và `read`;
-yêu cầu chúng cấp `--scope admin` sẽ trả về `403`.
-
-Token không bao giờ được tạo với quyền cao hơn quyền của người tạo. Chỉ người vận hành mới có thể tạo token `admin`: qua phiên bảng điều khiển, CLI cục bộ ngay trên máy chủ, `omniroute connect` với mật khẩu hoặc một phiên bản đã tắt đăng nhập. Thông tin xác thực máy (token truy cập `admin` hoặc khóa API có phạm vi `manage`/`admin`) chỉ có thể tạo token `write` và `read`; yêu cầu `--scope admin` bằng các thông tin này trả về `403`.
+Một token không bao giờ có thể được đúc với quyền lớn hơn người tạo nó đang có. Token `admin` chỉ có thể được tạo bởi operator — phiên dashboard, CLI cục bộ trên chính máy chủ, hoặc `omniroute connect` kèm mật khẩu. Thông tin xác thực máy (access token `admin`, hoặc khóa API có phạm vi `manage`/`admin`) chỉ có thể đúc token `write` và `read`; nếu yêu cầu `--scope admin`, chúng nhận `403`. Việc tắt đăng nhập không mở đường đúc token: access token ở bất kỳ phạm vi nào là thông tin xác thực mà các route luôn xác thực chấp nhận, nên một lệnh gọi ẩn danh nhận `401` ở mọi phạm vi.
 
 ---
 
-## Cấu hình CLI lập trình từ danh mục từ xa
+## Cấu hình CLI lập trình từ catalog từ xa
 
-`omniroute configure` đọc danh mục mô hình trực tiếp của **máy chủ đang hoạt động** và ghi
-cấu hình trên máy **của bạn**.
+`omniroute configure` đọc catalog model trực tiếp của **server đang hoạt động** và ghi cấu hình trên máy **của bạn**.
 
 ```bash
 omniroute configure codex
 #   Nhà cung cấp: glm, kmc, ollamacloud, opencode-go, …
 #   Nhà cung cấp: glm
-#   ID mô hình: glm/glm-5.2
+#   ID model: glm/glm-5.2
 #   ✔ Đã ghi ~/.codex/glm52.config.toml
 #   Sử dụng:  codex --profile glm52
 
-# chế độ không tương tác
+# không tương tác
 omniroute configure codex --provider glm --model glm/glm-5.2 --name glm52
 
-# giữ một mô hình thường dùng ở đầu bộ chọn tương tác
+# giữ một model dùng thường xuyên ở đầu bộ chọn tương tác
 omniroute configure codex --provider glm --model glm/glm-5.2 --favorite --yes
 ```
 
-Bộ chọn chỉ lưu ID mô hình (không bao giờ lưu URL hoặc thông tin xác thực) trong tệp cục bộ
-`model-preferences.json`, được phân phạm vi theo ngữ cảnh và CLI đích. Các mục yêu thích được
-hiển thị trước những lựa chọn gần đây; sử dụng `--unfavorite` để xóa mô hình đã chọn
-khỏi danh sách của ngữ cảnh/đích đó.
+Bộ chọn chỉ lưu ID model (không bao giờ lưu URL hay thông tin xác thực) trong tệp `model-preferences.json` cục bộ, được phân vùng theo ngữ cảnh và đích CLI. Mục yêu thích được hiển thị trước các lựa chọn gần đây; dùng `--unfavorite` để xóa một model đã chọn khỏi danh sách ngữ cảnh/đích đó.
 
-Hồ sơ được ghi tham chiếu khóa suy luận thông qua biến môi trường
-(`OMNIROUTE_API_KEY`) — khóa bí mật không bao giờ được ghi vào đĩa. Để thiết lập Codex cơ sở
-một lần (khối `[model_providers.omniroute]`), hãy xem
-[CODEX-CLI-CONFIGURATION.md](./CODEX-CLI-CONFIGURATION.md).
+Hồ sơ được ghi tham chiếu khóa inference qua biến môi trường (`OMNIROUTE_API_KEY`) — bí mật không bao giờ được ghi xuống đĩa. Để thiết lập Codex cơ bản một lần (khối `[model_providers.omniroute]`), xem [CODEX-CLI-CONFIGURATION.md](./CODEX-CLI-CONFIGURATION.md).
 
-### Khởi chạy CLI kết nối với máy chủ từ xa (không ghi cấu hình)
+### Chạy CLI với máy từ xa (không ghi cấu hình)
 
-`omniroute run <target>` cũng tuân theo ngữ cảnh đang hoạt động: URL cơ sở từ xa
-và thông tin xác thực của ngữ cảnh chỉ được chèn vào tiến trình được khởi chạy.
+`omniroute run <target>` cũng tôn trọng ngữ cảnh đang hoạt động: URL cơ sở từ xa và thông tin xác thực ngữ cảnh chỉ được đưa vào tiến trình được khởi chạy.
 
 ```bash
 omniroute connect 192.168.0.15
-omniroute run claude   --model openai/gpt-5.4          # Claude Code → máy chủ từ xa
+omniroute run claude   --model openai/gpt-5.4          # Claude Code → từ xa
 omniroute run gemini   --model glm/glm-5.2 -- --skip-trust -p "hello"
 omniroute run opencode --model glm/glm-5.2 -- run "reply OK"
 
-# Xem trước chính xác nội dung sẽ được khởi chạy (chỉ TÊN KHÓA môi trường, không bao giờ hiển thị giá trị):
+# Xem trước chính xác những gì sẽ được khởi chạy (chỉ TÊN biến môi trường, không bao giờ giá trị):
 omniroute run codex --dry-run --json
 ```
 
-Các đích: `claude`, `codex`, `aider`, `goose`, `opencode`, `qwen`, `gemini`
-(nguồn duy nhất: `bin/cli/cli-manifest.mjs`). Qwen và Gemini chạy với một
-thư mục home tạm thời, biệt lập và được xóa khi thoát, vì vậy quá trình khởi chạy không bao giờ tác động
-— hoặc rò rỉ dữ liệu vào — cấu hình công cụ cá nhân của bạn.
+Các target: `claude`, `codex`, `aider`, `goose`, `opencode`, `qwen`, `gemini` (nguồn duy nhất: `bin/cli/cli-manifest.mjs`). Qwen và Gemini chạy với một thư mục home tạm thời được cô lập và bị xóa khi thoát, nên việc khởi chạy không bao giờ chạm vào — hoặc rò rỉ vào — cấu hình công cụ cá nhân của bạn.
 
-### Các lệnh thiết lập riêng cho từng CLI
+### Lệnh thiết lập theo từng CLI
 
-Mỗi CLI được hỗ trợ đều có một lệnh thiết lập có khả năng làm việc với máy chủ từ xa (tất cả đều tuân theo ngữ cảnh
-đang hoạt động hoặc `--remote <url> --api-key <key>`):
+Mỗi CLI được hỗ trợ đều có một lệnh thiết lập nhận biết máy từ xa (tất cả đều tôn trọng ngữ cảnh đang hoạt động, hoặc `--remote <url> --api-key <key>`):
 
-| CLI         | Lệnh                       | Nội dung được ghi                                                                                                                                                                           |
-| ----------- | -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Codex       | `omniroute setup-codex`    | Các hồ sơ `~/.codex/<name>.config.toml` (theo từng mô hình)                                                                                                                                 |
-| Claude Code | `omniroute setup-claude`   | `~/.claude/profiles/<name>/settings.json` (theo từng mô hình)                                                                                                                               |
-| OpenCode    | `omniroute setup-opencode` | `~/.config/opencode/opencode.json` — nhà cung cấp `omniroute` tương thích với openai, bao gồm mọi mô hình trong danh mục (chạy `opencode -m omniroute/<model>`)                             |
-| Cline       | `omniroute setup-cline`    | `~/.cline/data/{globalState,secrets}.json` (chế độ CLI) + in các thiết lập tiện ích mở rộng VS Code để dán vào (tương thích với OpenAI, URL cơ sở **không có** `/v1`)                       |
-| Kilo Code   | `omniroute setup-kilo`     | `~/.local/share/kilo/auth.json` (CLI) + các thiết lập VS Code `kilocode.*` — tương thích với OpenAI, URL cơ sở **có** `/v1`                                                                 |
-| Continue    | `omniroute setup-continue` | `~/.continue/config.yaml` (VS Code/JetBrains + CLI `cn`) — `provider: openai`, `apiBase` **có** `/v1`, khóa qua `${{ secrets.OMNIROUTE_API_KEY }}`                                          |
-| Cursor      | `omniroute setup-cursor`   | in các bước thực hiện trong ứng dụng (Settings → Models → ghi đè OpenAI Base URL **có** `/v1` + khóa + mô hình). Cấu hình Cursor là SQLite không rõ cấu trúc — chỉ dành cho bảng trò chuyện |
-| Roo Code    | `omniroute setup-roo`      | ghi JSON nhập cho Roo (`~/.omniroute/roo-settings.json`) + đặt `roo-cline.autoImportSettingsPath` + in các bước trên giao diện người dùng (tương thích với OpenAI, URL cơ sở **có** `/v1`)  |
-| Crush       | `omniroute setup-crush`    | `~/.config/crush/crush.json` — nhà cung cấp `openai-compat`, `base_url` **có** `/v1`, khóa qua `$OMNIROUTE_API_KEY`                                                                         |
-| Zed         | `omniroute setup-zed`      | `~/.config/zed/settings.json` — `language_models.openai_compatible.omniroute`, `api_url` **có** `/v1`, khóa được Zed đọc từ `$OMNIROUTE_API_KEY` (không bao giờ được ghi)                   |
-| Goose       | `omniroute setup-goose`    | `~/.config/goose/config.yaml` (`GOOSE_PROVIDER=openai` + `OPENAI_HOST` **không có** `/v1` + `GOOSE_MODEL`) + hướng dẫn thiết lập môi trường                                                 |
-| Aider       | `omniroute setup-aider`    | `~/.aider.conf.yml` (`openai-api-base` **không có** `/v1` + `model: openai/<id>`) + hướng dẫn thiết lập môi trường (`aider --message --yes`)                                                |
-| Qwen Code   | `omniroute setup-qwen`     | mục V4 `modelProviders.openai` trong `~/.qwen/settings.json` + `OMNIROUTE_API_KEY` trong `~/.qwen/.env`                                                                                     |
+| CLI         | Lệnh                       | Ghi ra                                                                                                                                                                           |
+| ----------- | -------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Codex       | `omniroute setup-codex`    | các hồ sơ `~/.codex/<name>.config.toml` (theo từng model)                                                                                                                        |
+| Claude Code | `omniroute setup-claude`   | `~/.claude/profiles/<name>/settings.json` (theo từng model)                                                                                                                      |
+| OpenCode    | `omniroute setup-opencode` | `~/.config/opencode/opencode.json` — nhà cung cấp `omniroute` tương thích openai với mọi model trong catalog (chạy `opencode -m omniroute/<model>`)                              |
+| Cline       | `omniroute setup-cline`    | `~/.cline/data/{globalState,secrets}.json` (chế độ CLI) + in ra các cài đặt extension VS Code để dán vào (tương thích OpenAI, Base URL **không có** `/v1`)                       |
+| Kilo Code   | `omniroute setup-kilo`     | `~/.local/share/kilo/auth.json` (CLI) + cài đặt VS Code `kilocode.*` — tương thích OpenAI, Base URL **có** `/v1`                                                                 |
+| Continue    | `omniroute setup-continue` | `~/.continue/config.yaml` (VS Code/JetBrains + CLI `cn`) — `provider: openai`, `apiBase` **có** `/v1`, khóa qua `${{ secrets.OMNIROUTE_API_KEY }}`                               |
+| Cursor      | `omniroute setup-cursor`   | in ra các bước trong ứng dụng (Settings → Models → Override OpenAI Base URL **có** `/v1` + khóa + model). Cấu hình Cursor là SQLite không minh bạch — chỉ dùng được ở khung chat |
+| Roo Code    | `omniroute setup-roo`      | ghi JSON nhập của Roo (`~/.omniroute/roo-settings.json`) + đặt `roo-cline.autoImportSettingsPath` + in các bước trên UI (tương thích OpenAI, Base URL **có** `/v1`)              |
+| Crush       | `omniroute setup-crush`    | `~/.config/crush/crush.json` — nhà cung cấp `openai-compat`, `base_url` **có** `/v1`, khóa qua `$OMNIROUTE_API_KEY`                                                              |
+| Zed         | `omniroute setup-zed`      | `~/.config/zed/settings.json` — `language_models.openai_compatible.omniroute`, `api_url` **có** `/v1`, khóa do Zed đọc từ `$OMNIROUTE_API_KEY` (không bao giờ được ghi)          |
+| Goose       | `omniroute setup-goose`    | `~/.config/goose/config.yaml` (`GOOSE_PROVIDER=openai` + `OPENAI_HOST` **không có** `/v1` + `GOOSE_MODEL`) + công thức môi trường                                                |
+| Aider       | `omniroute setup-aider`    | `~/.aider.conf.yml` (`openai-api-base` **không có** `/v1` + `model: openai/<id>`) + công thức môi trường (`aider --message --yes`)                                               |
+| Qwen Code   | `omniroute setup-qwen`     | mục `modelProviders.openai` V4 trong `~/.qwen/settings.json` + `OMNIROUTE_API_KEY` trong `~/.qwen/.env`                                                                          |
 
 ```bash
-# OpenCode (nhà cung cấp tương thích với openai, tất cả mô hình trong danh mục, VPS từ xa)
+# OpenCode (nhà cung cấp tương thích openai, mọi model trong catalog, VPS từ xa)
 omniroute setup-opencode --remote http://192.168.0.15:20128 --api-key oma_live_xxx
-omniroute setup-opencode --only glm,kimi        # chỉ giữ lại các mô hình khớp
-opencode -m omniroute/glm/glm-5.2 "..."          # trước tiên hãy export OMNIROUTE_API_KEY
+omniroute setup-opencode --only glm,kimi        # chỉ giữ các model khớp
+opencode -m omniroute/glm/glm-5.2 "..."          # xuất OMNIROUTE_API_KEY trước
 ```
 
-> OpenCode cũng có khả năng tích hợp **plugin** phong phú hơn: `omniroute setup opencode`
-> (hiện đã hỗ trợ máy từ xa thông qua `--remote`) sẽ cài đặt `@omniroute/opencode-plugin`.
-> `setup-opencode` là phương án thay thế nhẹ, tương thích với OpenAI. Khóa API
-> được tham chiếu thông qua `{env:OMNIROUTE_API_KEY}` — không bao giờ được ghi vào ổ đĩa.
+> OpenCode cũng có tích hợp **plugin** phong phú hơn: `omniroute setup opencode` (nay nhận biết máy từ xa qua `--remote`) cài đặt `@omniroute/opencode-plugin`.
 >
-> Trên OpenCode v2, hãy sử dụng `@omniroute/opencode-plugin-v2` thay thế: cùng danh mục,
-> nhưng hợp đồng bộ nạp khác nhau. Plugin này đọc khóa từ kho thông tin xác thực riêng của OpenCode
-> khi tích hợp được kết nối, vì vậy cổng từ xa hoàn toàn không cần khóa trong
-> `opencode.json`.
+> `setup-opencode` là lựa chọn thay thế nhẹ, tương thích openai. Khóa API được tham chiếu qua `{env:OMNIROUTE_API_KEY}` — không bao giờ được ghi xuống đĩa.
+>
+> Trên OpenCode v2, hãy dùng `@omniroute/opencode-plugin-v2` thay thế: cùng catalog, hợp đồng loader khác. Khi tích hợp được kết nối, plugin đọc khóa từ kho thông tin xác thực của chính OpenCode, nên gateway từ xa hoàn toàn không cần khóa trong `opencode.json`.
 
 ---
 

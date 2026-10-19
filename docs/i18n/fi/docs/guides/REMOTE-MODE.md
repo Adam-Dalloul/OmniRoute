@@ -251,114 +251,92 @@ yhteys näkyy aktiivisena.
 
 ```bash
 omniroute tokens create --name "laptop" --scope write [--expires 30]
-#   ↳ tulostaa salaisuuden KERRAN — kopioi se nyt
-omniroute tokens list                 # peitetty: tunniste, nimi, käyttöoikeusalue, etuliite, tila, vanhenemisaika
-omniroute tokens revoke <id|prefix>   # kumoa välittömästi
-omniroute tokens scopes               # selitä kolme käyttöoikeusaluetta
+#   ↳ tulostaa salaisuuden KERRAN — kopioi se heti
+omniroute tokens list                 # peitetty: tunnus, nimi, scope, etuliite, tila, vanhentuminen
+omniroute tokens revoke <id|prefix>   # peruuta välittömästi
+omniroute tokens scopes               # selittää kolme scope-laajuutta
 ```
 
-`tokens`-komennot edellyttävät **admin**-tunnistetietoa. Voit hallita tunnuksia myös
-hallintapaneelin kohdassa **Asetukset → Käyttöoikeustunnukset** (luo, kumoa, kopioi kerran).
+`tokens`-komennot vaativat **admin**-tason tunnistetiedot. Voit hallita tunnuksia myös dashboardissa kohdassa **Asetukset → Käyttötunnukset** (luo, peruuta, kopioi kerran).
 
-Tunnukselle ei voi koskaan myöntää enempää oikeuksia kuin sen luojalla on. Vain
-operaattori voi luoda `admin`-tunnuksen — hallintapaneelin istunnon kautta,
-palvelimella paikallisesti käytettävällä CLI:llä, salasanan kanssa suoritettavalla
-`omniroute connect` -komennolla tai instanssissa, jossa sisäänkirjautuminen on poistettu käytöstä.
-Konetunnistetiedoilla (`admin`-käyttöoikeustunnuksella tai API-avaimella, jolla on
-`manage`- tai `admin`-käyttöoikeusalue) voidaan luoda vain `write`- ja `read`-tunnuksia;
-`--scope admin` -pyyntö palauttaa vastauksen `403`.
-
-Tokenia ei voi koskaan luoda laajemmilla oikeuksilla kuin sen luojalla on. Vain ylläpitäjä voi luoda `admin`-tokenin: hallintapaneelin istunnosta, palvelimella itsellään toimivasta paikallisesta CLI:stä, komennolla `omniroute connect` ja salasanalla tai instanssissa, jossa kirjautuminen on poistettu käytöstä. Konetunnukset (`admin`-käyttötoken tai API-avain, jonka oikeusalue on `manage`/`admin`) voivat luoda vain `write`- ja `read`-tokeneita; niillä tehty `--scope admin` -pyyntö palauttaa `403`.
+Tunnusta ei voi koskaan myöntää enemmillä oikeuksilla kuin sen luojalla on. `admin`-tunnuksen voi luoda vain operaattori: dashboard-istunto, paikallinen CLI palvelimella itsessään tai `omniroute connect` salasanalla. Koneen tunnistetiedot (`admin`-käyttötunnus tai API-avain, jolla on `manage`/`admin`-laajuus) voivat myöntää vain `write`- ja `read`-tunnuksia. Jos ne pyytävät `--scope admin`, vastaus on `403`. Kirjautumisen poistaminen käytöstä ei avaa tunnusten myöntämistä: millä tahansa laajuudella oleva käyttötunnus on tunnistetieto, jonka aina todennetut reitit hyväksyvät, joten anonyymi kutsu saa `401`-virheen kaikilla laajuuksilla.
 
 ---
 
-## Ohjelmointi-CLI:n määrittäminen etäluettelosta
+## Koodauksen CLI-työkalun määrittäminen etäluettelosta
 
-`omniroute configure` lukee **aktiivisen palvelimen** reaaliaikaisen malliluettelon ja kirjoittaa
-määritykset **omalle** koneellesi.
+`omniroute configure` lukee **aktiivisen palvelimen** reaaliaikaisen mallikatalogin ja kirjoittaa asetustiedoston **sinun** koneellesi.
 
 ```bash
 omniroute configure codex
 #   Palveluntarjoajat: glm, kmc, ollamacloud, opencode-go, …
 #   Palveluntarjoaja: glm
 #   Mallin tunnus: glm/glm-5.2
-#   ✔ Kirjoitettiin ~/.codex/glm52.config.toml
-#   Käytä näin:  codex --profile glm52
+#   ✔ Kirjoitettu ~/.codex/glm52.config.toml
+#   Käyttö:  codex --profile glm52
 
 # ei-interaktiivinen
 omniroute configure codex --provider glm --model glm/glm-5.2 --name glm52
 
-# pidä usein käytetty malli interaktiivisen valitsimen ylimpänä
+# pidä usein käytetty malli interaktiivisen valitsimen yläosassa
 omniroute configure codex --provider glm --model glm/glm-5.2 --favorite --yes
 ```
 
-Valitsin säilyttää paikallisessa `model-preferences.json`-tiedostossa vain mallitunnukset
-(ei koskaan URL-osoitteita tai tunnistetietoja), kontekstin ja CLI-kohteen mukaan rajattuina.
-Suosikit näytetään ennen viimeksi tehtyjä valintoja; poista valittu malli kyseisen
-kontekstin/kohteen luettelosta käyttämällä valitsinta `--unfavorite`.
+Valitsin säilyttää paikallisessa tiedostossa `model-preferences.json` vain mallitunnukset (ei koskaan URL-osoitteita tai tunnistetietoja), rajattuina kontekstin ja CLI-kohteen mukaan. Suosikit näytetään ennen viimeisimpiä valintoja. Käytä `--unfavorite`-lippua poistaaksesi valitun mallin kyseisen kontekstin ja kohteen luettelosta.
 
-Kirjoitettu profiili viittaa päättelyavaimeen ympäristömuuttujan
-(`OMNIROUTE_API_KEY`) kautta — salaisuutta ei koskaan kirjoiteta levylle. Katso Codexin
-kertaluonteisen perusmäärityksen (`[model_providers.omniroute]`-lohkon) ohjeet tiedostosta
-[CODEX-CLI-CONFIGURATION.md](./CODEX-CLI-CONFIGURATION.md).
+Kirjoitettu profiili viittaa päättelyavaimeen ympäristömuuttujan `OMNIROUTE_API_KEY` kautta. Salaisuutta ei kirjoiteta levylle koskaan. Kertaluonteisesta Codex-perusasetuksesta (`[model_providers.omniroute]`-lohko) on lisätietoja tiedostossa [CODEX-CLI-CONFIGURATION.md](./CODEX-CLI-CONFIGURATION.md).
 
-### CLI:n käynnistäminen etäpalvelua vasten (määrityksiä kirjoittamatta)
+### CLI:n käynnistäminen etäpalvelimelle (asetuksia ei kirjoiteta)
 
-Myös `omniroute run <target>` noudattaa aktiivista kontekstia: etäpalvelun perus-URL
-ja kontekstin tunnistetieto lisätään vain käynnistettyyn prosessiin.
+`omniroute run <target>` huomioi myös aktiivisen kontekstin: etäpalvelimen perus-URL ja kontekstin tunnistetiedot injektoidaan vain käynnistettyyn prosessiin.
 
 ```bash
 omniroute connect 192.168.0.15
-omniroute run claude   --model openai/gpt-5.4          # Claude Code → etäpalvelu
+omniroute run claude   --model openai/gpt-5.4          # Claude Code → etä
 omniroute run gemini   --model glm/glm-5.2 -- --skip-trust -p "hello"
 omniroute run opencode --model glm/glm-5.2 -- run "reply OK"
 
-# Esikatsele täsmälleen, mitä käynnistettäisiin (vain ympäristömuuttujien AVAINTEN NIMET, ei koskaan arvoja):
+# Esikatsele tarkalleen, mitä käynnistettäisiin (vain ympäristömuuttujien nimet, ei arvoja):
 omniroute run codex --dry-run --json
 ```
 
-Kohteet: `claude`, `codex`, `aider`, `goose`, `opencode`, `qwen`, `gemini`
-(ainoa lähde: `bin/cli/cli-manifest.mjs`). Qwen ja Gemini suoritetaan tilapäisessä
-eristetyssä kotihakemistossa, joka poistetaan prosessin päättyessä, joten käynnistys ei koskaan
-muuta henkilökohtaisia työkalumäärityksiäsi — eikä vuoda niihin.
+Kohteet: `claude`, `codex`, `aider`, `goose`, `opencode`, `qwen`, `gemini` (ainoa lähde: `bin/cli/cli-manifest.mjs`). Qwen ja Gemini käynnistyvät väliaikaisessa eristetyssä kotihakemistossa, joka poistetaan lopetettaessa, joten käynnistys ei koskaan koske henkilökohtaisiin työkalujen asetuksiisi eikä vuoda niihin.
 
-### CLI-kohtaiset määrityskomennot
+### Asennuskomennot CLI-työkaluittain
 
-Jokaisella tuetulla CLI:llä on etäpalvelun huomioiva määrityskomento (kaikki noudattavat
-aktiivista kontekstia tai valitsimia `--remote <url> --api-key <key>`):
+Jokaisella tuetulla CLI-työkalulla on etätietoinen asennuskomento (kaikki noudattavat aktiivista kontekstia tai `--remote <url> --api-key <key>`):
 
-| CLI         | Komento                    | Mitä se kirjoittaa                                                                                                                                                                                                    |
-| ----------- | -------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Codex       | `omniroute setup-codex`    | `~/.codex/<name>.config.toml`-profiilit (mallikohtaisesti)                                                                                                                                                            |
-| Claude Code | `omniroute setup-claude`   | `~/.claude/profiles/<name>/settings.json` (mallikohtaisesti)                                                                                                                                                          |
-| OpenCode    | `omniroute setup-opencode` | `~/.config/opencode/opencode.json` — OpenAI-yhteensopiva `omniroute`-palveluntarjoaja, joka sisältää kaikki luettelon mallit (suorita `opencode -m omniroute/<model>`)                                                |
-| Cline       | `omniroute setup-cline`    | `~/.cline/data/{globalState,secrets}.json` (CLI-tila) + tulostaa liitettävät VS Code -laajennuksen asetukset (OpenAI-yhteensopiva, perus-URL **ilman** osaa `/v1`)                                                    |
-| Kilo Code   | `omniroute setup-kilo`     | `~/.local/share/kilo/auth.json` (CLI) + VS Code -asetukset `kilocode.*` — OpenAI-yhteensopiva, perus-URL **sisältää** osan `/v1`                                                                                      |
-| Continue    | `omniroute setup-continue` | `~/.continue/config.yaml` (VS Code/JetBrains + `cn` CLI) — `provider: openai`, `apiBase` **sisältää** osan `/v1`, avain muodossa `${{ secrets.OMNIROUTE_API_KEY }}`                                                   |
-| Cursor      | `omniroute setup-cursor`   | tulostaa sovelluksessa tehtävät vaiheet (Settings → Models → Override OpenAI Base URL **sisältää** osan `/v1` + avain + malli). Cursorin määritys on läpinäkymätön SQLite — vain keskustelupaneeli                    |
-| Roo Code    | `omniroute setup-roo`      | kirjoittaa Roon tuonti-JSON-tiedoston (`~/.omniroute/roo-settings.json`) + asettaa `roo-cline.autoImportSettingsPath`-arvon + tulostaa käyttöliittymävaiheet (OpenAI-yhteensopiva, perus-URL **sisältää** osan `/v1`) |
-| Crush       | `omniroute setup-crush`    | `~/.config/crush/crush.json` — `openai-compat`-palveluntarjoaja, `base_url` **sisältää** osan `/v1`, avain muuttujan `$OMNIROUTE_API_KEY` kautta                                                                      |
-| Zed         | `omniroute setup-zed`      | `~/.config/zed/settings.json` — `language_models.openai_compatible.omniroute`, `api_url` **sisältää** osan `/v1`, Zed lukee avaimen muuttujasta `$OMNIROUTE_API_KEY` (sitä ei koskaan kirjoiteta)                     |
-| Goose       | `omniroute setup-goose`    | `~/.config/goose/config.yaml` (`GOOSE_PROVIDER=openai` + `OPENAI_HOST` **ilman** osaa `/v1` + `GOOSE_MODEL`) + ympäristömuuttujien määritysohje                                                                       |
-| Aider       | `omniroute setup-aider`    | `~/.aider.conf.yml` (`openai-api-base` **ilman** osaa `/v1` + `model: openai/<id>`) + ympäristömuuttujien määritysohje (`aider --message --yes`)                                                                      |
-| Qwen Code   | `omniroute setup-qwen`     | `~/.qwen/settings.json` V4:n `modelProviders.openai`-merkintä + `OMNIROUTE_API_KEY` tiedostossa `~/.qwen/.env`                                                                                                        |
+| CLI         | Komento                    | Mitä se kirjoittaa                                                                                                                                                                                                     |
+| ----------- | -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Codex       | `omniroute setup-codex`    | `~/.codex/<name>.config.toml`-profiilit (mallikohtaisesti)                                                                                                                                                             |
+| Claude Code | `omniroute setup-claude`   | `~/.claude/profiles/<name>/settings.json` (mallikohtaisesti)                                                                                                                                                           |
+| OpenCode    | `omniroute setup-opencode` | `~/.config/opencode/opencode.json`: palveluntarjoaja `omniroute` openai-yhteensopivalla rajapinnalla ja kaikki katalogin mallit (suorita `opencode -m omniroute/<model>`)                                              |
+| Cline       | `omniroute setup-cline`    | `~/.cline/data/{globalState,secrets}.json` (CLI-tila) + tulostaa VS Code -laajennuksen asetukset liitettäväksi (OpenAI-yhteensopiva, Base URL **ilman** `/v1`)                                                         |
+| Kilo Code   | `omniroute setup-kilo`     | `~/.local/share/kilo/auth.json` (CLI) + VS Code `kilocode.*`-asetukset: OpenAI-yhteensopiva, Base URL **kanssa** `/v1`                                                                                                 |
+| Continue    | `omniroute setup-continue` | `~/.continue/config.yaml` (VS Code/JetBrains + `cn` CLI): `provider: openai`, `apiBase` **kanssa** `/v1`, avain `${{ secrets.OMNIROUTE_API_KEY }}`-kautta                                                              |
+| Cursor      | `omniroute setup-cursor`   | tulostaa vaiheet sovellukseen (Settings → Models → Override OpenAI Base URL **kanssa** `/v1` + avain + malli). Cursorin asetukset ovat läpinäkymätön SQLite-tietokanta, joten se koskee vain chat-paneelia             |
+| Roo Code    | `omniroute setup-roo`      | kirjoittaa Roo-tuontitiedoston JSON-muodossa (`~/.omniroute/roo-settings.json`) + asettaa `roo-cline.autoImportSettingsPath`-arvon + tulostaa käyttöliittymän vaiheet (OpenAI-yhteensopiva, Base URL **kanssa** `/v1`) |
+| Crush       | `omniroute setup-crush`    | `~/.config/crush/crush.json`: palveluntarjoaja `openai-compat`, `base_url` **kanssa** `/v1`, avain `$OMNIROUTE_API_KEY`-kautta                                                                                         |
+| Zed         | `omniroute setup-zed`      | `~/.config/zed/settings.json`: `language_models.openai_compatible.omniroute`, `api_url` **kanssa** `/v1`, Zed lukee avaimen `$OMNIROUTE_API_KEY`-muuttujasta (ei koskaan kirjoiteta)                                   |
+| Goose       | `omniroute setup-goose`    | `~/.config/goose/config.yaml` (`GOOSE_PROVIDER=openai` + `OPENAI_HOST` **ilman** `/v1` + `GOOSE_MODEL`) + env-resepti                                                                                                  |
+| Aider       | `omniroute setup-aider`    | `~/.aider.conf.yml` (`openai-api-base` **ilman** `/v1` + `model: openai/<id>`) + env-resepti (`aider --message --yes`)                                                                                                 |
+| Qwen Code   | `omniroute setup-qwen`     | `~/.qwen/settings.json`, V4-merkintä `modelProviders.openai` + `OMNIROUTE_API_KEY` tiedostossa `~/.qwen/.env`                                                                                                          |
 
 ```bash
-# OpenCode (OpenAI-yhteensopiva palveluntarjoaja, kaikki luettelon mallit, etä-VPS)
+# OpenCode (openai-yhteensopiva palveluntarjoaja, kaikki katalogin mallit, etä-VPS)
 omniroute setup-opencode --remote http://192.168.0.15:20128 --api-key oma_live_xxx
-omniroute setup-opencode --only glm,kimi        # säilytä vain täsmäävät mallit
-opencode -m omniroute/glm/glm-5.2 "..."          # vie OMNIROUTE_API_KEY ensin
+omniroute setup-opencode --only glm,kimi        # pidä vain vastaavat mallit
+opencode -m omniroute/glm/glm-5.2 "..."          # vie ensin OMNIROUTE_API_KEY
 ```
 
-> OpenCodessa on myös monipuolisempi **lisäosaintegraatio**: `omniroute setup opencode`
-> (tukee nyt etäyhteyksiä `--remote`-valitsimen avulla) asentaa `@omniroute/opencode-plugin`-paketin.
-> `setup-opencode` on kevyt, OpenAI-yhteensopiva vaihtoehto. API-avaimeen
-> viitataan muodossa `{env:OMNIROUTE_API_KEY}` — sitä ei koskaan kirjoiteta levylle.
+> OpenCodella on myös rikkaampi **plugin**-integraatio: `omniroute setup opencode`
+> (nyt etätietoinen `--remote`-lipun kautta) asentaa paketin `@omniroute/opencode-plugin`.
+> `setup-opencode` on kevyempi openai-yhteensopiva vaihtoehto. API-avainta viitataan
+> `{env:OMNIROUTE_API_KEY}`-muodossa, eikä sitä kirjoiteta koskaan levylle.
 >
-> Käytä OpenCode v2:ssa sen sijaan `@omniroute/opencode-plugin-v2`-pakettia: sama luettelo,
-> mutta eri lataussopimus. Se lukee avaimen OpenCoden omasta tunnistetietosäilöstä,
-> kun integraatio on yhdistetty, joten etäyhdyskäytävä ei tarvitse avainta
-> `opencode.json`-tiedostossa lainkaan.
+> OpenCode v2:ssa käytä sen sijaan pakettia `@omniroute/opencode-plugin-v2`: sama katalogi,
+> mutta eri latauskontrakti. Se lukee avaimen OpenCoden omasta tunnistetietovarastosta,
+> kun integraatio on yhdistetty, joten etägateway ei tarvitse avainta `opencode.json`-tiedostossa lainkaan.
 
 ---
 

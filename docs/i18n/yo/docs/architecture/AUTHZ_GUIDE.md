@@ -13,129 +13,59 @@ OmniRoute ní ọ̀nà ìfọwọ́sí tó mọ ọ̀nà tó máa ń ṣàkóso 
 
 > Orísun: [diagrams/authz-pipeline.mmd](../diagrams/authz-pipeline.mmd)
 
-## Àwọn Ọ̀nà Ìfàṣẹsí Méjì
+## Ọ̀nà Ìjẹ́rìí Méjì
 
-### 1. Kọ́kọ́rọ́ API (Bearer)
+### 1. API Key (Bearer)
 
-A máa ń lò ó fún àwọn API oníbàárà tó bá OpenAI/Anthropic/Gemini mu àti àwọn ipa-ọ̀nà ìṣàkóso díẹ̀ nígbà tí kọ́kọ́rọ́ náà bá ní àyè `manage`.
+A máa ń lò ó fún àwọn API oníbàárà tí ó bá OpenAI/Anthropic/Gemini mu, àti fún díẹ̀ lára àwọn ọ̀nà ìṣàkóso nígbà tí kọ́kọ́rọ́ bá ní ìwọ̀n `manage`.
 
 ```
 Authorization: Bearer <api-key>
 ```
 
-A máa ń fìdí rẹ̀ múlẹ̀ nípasẹ̀ `isValidApiKey()` / `extractApiKey()` nínú `src/sse/services/auth.ts`, a sì tún ń gbé e jáde nípasẹ̀ `src/shared/utils/apiAuth.ts`. Olùfìdí-múlẹ̀ náà tún gba àwọn àyípadà àyíká `OMNIROUTE_API_KEY` / `ROUTER_API_KEY` gẹ́gẹ́ bí àwọn kọ́kọ́rọ́ ìfiránṣẹ́-tààrà tó wà pẹ́ títí (ọ̀ràn #1350).
+A ń fọwọ́sí i nípasẹ̀ `isValidApiKey()` / `extractApiKey()` nínú `src/sse/services/auth.ts`, a sì tún ń kó o jáde nípasẹ̀ `src/shared/utils/apiAuth.ts`. Olùfọwọ́sí náà tún ń gba àwọn env var `OMNIROUTE_API_KEY` / `ROUTER_API_KEY` gẹ́gẹ́ bí kọ́kọ́rọ́ ìkọjá tí ó máa wà títí (issue #1350).
 
-### 2. Ìgbà Dashboard (kúkì auth_token)
+### 2. Ìgbà Dashboard (auth_token cookie)
 
-Fún àwọn ojú-ewé dashboard àti àwọn iṣẹ́ alákòóso.
+Fún àwọn ojú-ìwé dashboard àti iṣẹ́ admin.
 
 ```
 Cookie: auth_token=<JWT signed with JWT_SECRET>
 ```
 
-Kúkì kan jẹ́ ìgbà aṣàmúlò nìkan nígbà tí JWT bá kọjá ìjẹ́rìísí **tí** ó sì ní `authenticated: true`
-(`src/shared/utils/dashboardSessionToken.ts` → `verifyDashboardSessionToken`). Gbogbo
-olùlò kúkì náà (olùṣọ́ ipa-ọ̀nà dashboard (`isDashboardSessionAuthenticated()`), ìsọdọ̀tun pipeline authz, ìfọwọ́bọ̀ WebSocket, server
-aláàyè, `/api/settings/require-login`, `/api/auth/status`) máa ń gba inú olùrànlọ́wọ́ yẹn kọjá.
-Àwọn JWT mìíràn tí a fọwọ́ sí pẹ̀lú `JWT_SECRET` wà — ìfiránṣẹ́-tààrà Cursor CLI máa ń ṣe
-àwọn token `iss "omniroute" / aud "cursor-cli"` fún àwọn tó ní kọ́kọ́rọ́ — wọn kì í sì í ṣe ìgbà aṣàmúlò láé
-(#13298).
+Kúkì jẹ́ ìgbà kan ṣoṣo nígbà tí JWT bá fọwọ́ sí **àti** tí ó gbé `authenticated: true` (`src/shared/utils/dashboardSessionToken.ts` → `verifyDashboardSessionToken`). Gbogbo olùlò kúkì (dashboard route guard (`isDashboardSessionAuthenticated()`), ìsọdọ̀tun authz pipeline, WebSocket handshake, live server, `/api/settings/require-login`, `/api/auth/status`) ń kọjá nípasẹ̀ olùrànlọ́wọ́ yìí.
+Àwọn JWT mìíràn tí a fọwọ́ sí pẹ̀lú `JWT_SECRET` wà: Cursor CLI passthrough ń ṣe àwọn token `iss "omniroute" / aud "cursor-cli"` fún àwọn tí ó ní kọ́kọ́rọ́, wọn kì í sì í ṣe ìgbà rárá (#13298).
 
-A máa ń fìdí rẹ̀ múlẹ̀ nípasẹ̀ `isDashboardSessionAuthenticated()` nínú `src/shared/utils/apiAuth.ts`. Pipeline náà máa ń sọ JWT di tuntun láìfọwọ́ṣe nígbà tí ó bá ku ọjọ́ tí kò tó 7 nínú àkókò ìwàláàyè ọjọ́ 30 rẹ̀.
+A ń fọwọ́sí i nípasẹ̀ `isDashboardSessionAuthenticated()` nínú `src/shared/utils/apiAuth.ts`. Pipeline náà ń sọ JWT di tuntun láìfọwọ́kọ nígbà tí ó bá kù díẹ̀ ju ọjọ́ 7 lọ nínú ìgbésí-ayé rẹ̀ ọjọ́ 30.
 
-Ìgbà aṣàmúlò tún lè parí kí ọjọ́ 30 rẹ̀ tó pé, nítorí pé gbogbo olùṣẹ̀dá máa ń gba inú `mintDashboardSessionToken` kọjá (àkókò ìmújáde `iat` àti ìdánimọ̀ `jti`), olùjẹ́rìísí náà sì máa ń yẹ ìṣètò méjì wò: `sessionsValidAfter`, èyí tí ìyípadà ọ̀rọ̀ aṣínà máa ń ṣètò kí gbogbo ìgbà aṣàmúlò tí a ṣe kí ó tó ṣẹlẹ̀ má ṣe kọjá ìjẹ́rìísí mọ́ (ẹ̀rọ aṣàwákiri tó yí ọ̀rọ̀ aṣínà padà yóò gba kúkì tuntun), àti `revokedDashboardSessions`, níbi tí `POST /api/auth/logout` ti máa ń fi `jti` ìgbà aṣàmúlò tí a jáde kúrò sí. Àwọn ìgbà aṣàmúlò tí ẹ̀yà àtijọ́ ṣe kò ní èyíkéyìí nínú àwọn claim wọ̀nyí, wọ́n á sì wà ní ìfọwọ́sí títí di ìyípadà ọ̀rọ̀ aṣínà àkọ́kọ́. Tí kò bá ṣeé ka àwọn ìṣètò náà, a kò ní fọkàn tán ìgbà aṣàmúlò náà.
+Ìgbà lè parí kí ọjọ́ 30 tó kọjá, nítorí pé olùṣẹ̀dá kọ̀ọ̀kan ń kọjá nípasẹ̀ `mintDashboardSessionToken` (àkókò ìtújáde `iat` àti ìdánimọ̀ `jti`), olùfọwọ́sí náà sì ń ṣàyẹ̀wò àwọn ètò méjì: `sessionsValidAfter`, tí ìyípadà ọ̀rọ̀ aṣínà ń ṣètò fún gbogbo ìgbà tí a ti tú jáde ṣáájú rẹ̀ kí ó má baà fọwọ́ sí i mọ́ (aṣàwákiri tí ó yí ọ̀rọ̀ aṣínà padà ń gba kúkì tuntun), àti `revokedDashboardSessions`, èyí tí `POST /api/auth/logout` ń fi `jti` ìgbà tí ó jáde kún. Àwọn ìgbà tí ẹ̀yà tí ó dàgbà jù ṣẹ̀dá kò ní ọ̀kan nínú àwọn ẹ̀tọ́ méjì yìí, wọ́n sì máa wà ní ìmúṣẹ títí di ìyípadà ọ̀rọ̀ aṣínà àkọ́kọ́. Tí a kò bá lè ka àwọn ètò náà, a kò gbẹ́kẹ̀ lé ìgbà náà.
 
-Àwọn ipa-ọ̀nà ìṣàkóso kan gba **èyíkéyìí** nínú àwọn ọ̀nà méjèèjì: kúkì TÀBÍ `Bearer <key>` nígbà tí kọ́kọ́rọ́ API bá ní àyè `manage` (tàbí `admin`). Èyí ni ohun tó mú kí ìṣàn-iṣẹ́ “tí a lè ṣètò nípasẹ̀ àwọn ìpè API” tí a fi kún v3.8 ṣeé ṣe.
+Àwọn ọ̀nà ìṣàkóso kan ń gba **ọ̀kan nínú** ọ̀nà méjì: kúkì TÀBÍ `Bearer <key>` nígbà tí kọ́kọ́rọ́ API bá ní ìwọ̀n `manage` (tàbí `admin`). Èyí ni ó ń jẹ́ kí iṣẹ́ 'configurable via API calls' tí a fi kún ní v3.8 ṣeé ṣe.
 
-#### Ẹnu-ọ̀nà ìwọlé OIDC àṣàyàn (#6973)
+#### Ẹnu-ọ̀nà OIDC àṣàyàn (#6973)
 
-Ìwọlé alákòóso dashboard tún ṣe àtìlẹ́yìn fún ìṣàn OIDC (OpenID Connect) **tí a yan láti lò**
-lẹ́gbẹ̀ẹ́ ìwọlé ọ̀rọ̀ aṣínà àiyipada — a kì í yọ ìwọlé ọ̀rọ̀ aṣínà kúrò láé, a kàn
-ń fi kún un:
+Wíwọlé admin dashboard tún ń ṣe àtìlẹ́yìn fún ìṣàn OIDC (OpenID Connect) **àṣàyàn** pẹ̀lú wíwọlé ọ̀rọ̀ aṣínà àtàtà. A kò yọ wíwọlé ọ̀rọ̀ aṣínà kúrò láé, a kàn ń fi kún un nìkan:
 
-- Ó jẹ́ pípa mọ́ àyàfi tí `settings.oidcEnabled === true` **àti pé** `oidcIssuer` /
-  `oidcClientId` / `oidcClientSecret` jẹ́ títò ní ẹ̀kúnrẹ́rẹ́ (Settings → Auth).
-  Bí bẹ́ẹ̀ kọ́, `GET /api/auth/oidc/login` yóò dá `400` padà.
-- `GET /api/auth/oidc/login` ń ṣàwárí `authorization_endpoint` láti inú
-  `/.well-known/openid-configuration` olùfúnni (yóò lo
-  `<issuer>/authorize` bí èyí kò bá ṣiṣẹ́), ó ń kọ́ URI ìdarípadà láti inú ìbéèrè
-  tó wọlé (pẹ̀lú ìmọ̀ nípa `x-forwarded-proto`), ó sì ń darí lọ sí IdP pẹ̀lú `state`
-  àrìnká tí a tọ́jú sínú kúkì `oidc_state` `httpOnly`.
-- `GET /api/auth/oidc/callback` ń fìdí `state` múlẹ̀, ó ń pààrọ̀ kóòdù àṣẹ,
-  ó sì ń ṣàyẹ̀wò ìfọwọ́sí tókìnì ID nípasẹ̀ JWKS olùfúnni
-  (`createRemoteJWKSet` ti `jose`, tí a ń ṣe ìpamọ́ fún URI JWKS kọ̀ọ̀kan) pẹ̀lú
-  àwọn àyẹ̀wò `issuer`/`audience`. Àtòkọ ìyọ̀ǹda `oidcAllowedSubjects` jẹ́ dandan:
-  ó ń bá ẹ̀sùn `sub` tókìnì náà tàbí ẹ̀sùn `email` rẹ̀ mu — ẹ̀sùn ímeèlì ni a máa
-  gba kà nìkan nígbà tí `email_verified === true`, nítorí náà ímeèlì tí IdP kò
-  tíì fìdí rẹ̀ múlẹ̀ kò lè kọjá ibodè náà láéláé — àti pé bí kò bá sí àkọsílẹ̀ kankan,
-  callback náà yóò kọ gbogbo ìwọlé (`not_configured`).
-- Nígbà àṣeyọrí, ó ń ṣe JWT `auth_token` ọjọ́ 30 **kan náà gan-an** tí ìwọlé
-  pẹ̀lú ọ̀rọ̀ aṣínà ń ṣe (`src/app/api/auth/login/route.ts`), nítorí náà gbogbo
-  ìlànà ìgbà dashboard tó kù (ìmúdójúìwọ̀n aládàáṣiṣẹ́, àwọn àsìá kúkì) kò yí padà —
-  OIDC kàn ń rọ́pò bí a ṣe ń ṣe kúkì náà, kì í ṣe ohun tí ó ń fúnni láṣẹ sí.
-- Gbogbo ètò `oidc*` (`oidcEnabled`, `oidcDisablePasswordLogin`,
-  `oidcIssuer`, `oidcClientId`, `oidcClientSecret`, `oidcAllowedSubjects`,
-  `oidcRedirectPath`, `oidcScopes`) wà nínú `SECURITY_IMPACTING_SETTINGS_KEYS`
-  (`src/shared/constants/securityImpactingSettings.ts`): `PATCH /api/settings`
-  yóò dá `400 PASSWORD_REQUIRED` padà àyàfi tí body náà bá ní ọ̀rọ̀ aṣínà ìṣàkóso
-  gẹ́gẹ́ bí `currentPassword` (`401 PASSWORD_MISMATCH` tí kò bá tọ̀nà).
-  `oidcDisablePasswordLogin` ń kọ ìwọlé _pẹ̀lú ọ̀rọ̀ aṣínà_ (`POST /api/auth/login`)
-  ṣùgbọ́n ó ń pa hash ọ̀rọ̀ aṣínà tí a tọ́jú mọ́, ìfàṣẹsí tuntun sì tún ń ṣàyẹ̀wò
-  `currentPassword` pẹ̀lú rẹ̀.
-- `corsOrigins` àti `bruteForceProtection` tún wà nínú `SECURITY_IMPACTING_SETTINGS_KEYS`:
-  fífún ọ̀kan nínú wọn ní àyè púpọ̀ sí i ń sọ àwọn ààbò ìwọlé di aláìlágbára, nítorí
-  náà wọ́n nílò ìfàṣẹsí tuntun `currentPassword` kan náà (taabu Security ń béèrè
-  fún un), ìgbàwọlé JSON sì ń yọ wọ́n kúrò.
-- Gbogbo kọ́kọ́rọ́ ìlànà ààbò — àwọn àkọsílẹ̀ `SECURITY_IMPACTING_SETTINGS_KEYS`,
-  gbogbo kọ́kọ́rọ́ `oidc*` àti ipò ìgbà dashboard — jẹ́ ti **olùdarí nìkan** lórí
-  `PATCH /api/settings`: kọ́kọ́rọ́ API tó ní scope `manage` tàbí tókìnì àyèwọlé `oma_`
-  ni a máa kọ̀ pẹ̀lú `403` kódà tí ó bá fi `currentPassword` tó tọ̀nà ránṣẹ́, a sì
-  máa ṣàkọsílẹ̀ ìkọ̀sílẹ̀ náà sínú àkọsílẹ̀ àyẹ̀wò gẹ́gẹ́ bí `settings.update_failed`
-  pẹ̀lú `reason: OPERATOR_REQUIRED`
-  (`requireOperatorCredential()` nínú `src/lib/api/operatorCredential.ts`).
-  Àwọn ètò lasán (àkòrí, àwọn ìfẹ́ ìfihàn) ṣì lè jẹ́ kí kọ́kọ́rọ́ tó ní `manage`
-  tàbí tókìnì àyèwọlé `admin` kọ sí wọn. Gbogbo ìyípadà sí `/api/settings` fúnra rẹ̀
-  (àti sí `/api/settings/require-login`) tún nílò scope tókìnì àyèwọlé `admin`
-  (`ADMIN_MUTATION_EXACT_PATHS` nínú `src/server/authz/accessScopes.ts`, ìbámu
-  ọ̀nà pípé); `GET` ṣì jẹ́ `read`, àwọn sub-routes `/api/settings/*` yòókù (proxies,
-  àwọn àiyipada combo, àwọn orúkọ àfàpamọ́ model, compression, purges…) sì ń pa
-  scope `write` tí a pinnu láti inú method mọ́.
-- `POST /api/settings/import-json` ń fò ìfàṣẹsí tuntun yẹn kọjá, nítorí náà ó ń
-  yọ gbogbo kọ́kọ́rọ́ inú `IMPORT_STRIPPED_SETTINGS_KEYS` (fáìlì kan náà) kúrò
-  kí ó tó kọ: ọ̀rọ̀ aṣínà àti `currentPassword`, gbogbo àkọsílẹ̀
-  `SECURITY_IMPACTING_SETTINGS_KEYS`, àti ipò ìgbà dashboard
-  (`sessionsValidAfter`, `revokedDashboardSessions`).
-  Nítorí náà, gbígbà backup àtijọ́ wọlé kò lè jí ìgbà kan tí ìyípadà ọ̀rọ̀ aṣínà
-  tàbí ìjáde ti parí sọjí.
+- A wà ní pípa àfi tí `settings.oidcEnabled === true` **àti** `oidcIssuer` / `oidcClientId` / `oidcClientSecret` gbogbo wọn bá ti ṣètò (Settings → Auth). `GET /api/auth/oidc/login` ń dá `400` padà bí kò bá rí bẹ́ẹ̀.
+- `GET /api/auth/oidc/login` ń ṣàwárí `authorization_endpoint` láti `/.well-known/openid-configuration` ti issuer (yóò padà sí `<issuer>/authorize`), ń kọ́ redirect URI láti ìbéèrè tí ń wọlé (ó mọ `x-forwarded-proto`), ó sì ń darí sí IdP pẹ̀lú `state` àìlera tí a tọ́jú sínú kúkì `httpOnly` `oidc_state`.
+- `GET /api/auth/oidc/callback` ń fọwọ́sí `state`, ń pààrọ̀ authorization code, ó sì ń ṣàyẹ̀wò ìbuwọ́lu ID token nípasẹ̀ JWKS ti issuer (`createRemoteJWKSet` ti `jose`, tí a fi pamọ́ fún JWKS URI kọ̀ọ̀kan) pẹ̀lú àyẹ̀wò `issuer`/`audience`. A nílò àkójọ `oidcAllowedSubjects`: ó ń baramu `sub` claim token náà tàbí `email` claim rẹ̀. A máa ń gba email claim nìkan nígbà tí `email_verified === true`, nítorí náà email tí a kò fọwọ́ sí ní IdP kì yóò kọjá ẹnu-ọ̀nà náà láé. Tí kò bá sí ohunkóhun nínú àkójọ, callback ń kọ gbogbo wíwọlé (`not_configured`).
+- Nígbà tí ó bá yọrí sí rere, ó ń ṣe **JWT `auth_token` ọjọ́ 30 kan náà gan-an** tí wíwọlé ọ̀rọ̀ aṣínà ń fúnni (`src/app/api/auth/login/route.ts`), nítorí náà pipeline ìgbà dashboard yòókù (ìsọdọ̀tun aládàáṣe, àsíá kúkì) kò yí padà. OIDC ń rọ́pò bí a ṣe ń ṣẹ̀dá kúkì nìkan, kì í ṣe ohun tí ó ń fúnni.
+- Gbogbo ètò `oidc*` (`oidcEnabled`, `oidcDisablePasswordLogin`, `oidcIssuer`, `oidcClientId`, `oidcClientSecret`, `oidcAllowedSubjects`, `oidcRedirectPath`, `oidcScopes`) wà nínú `SECURITY_IMPACTING_SETTINGS_KEYS` (`src/shared/constants/securityImpactingSettings.ts`): `PATCH /api/settings` ń dáhùn pẹ̀lú `400 PASSWORD_REQUIRED` àfi tí ara ìbéèrè bá gbé ọ̀rọ̀ aṣínà ìṣàkóso gẹ́gẹ́ bí `currentPassword` (`401 PASSWORD_MISMATCH` tí kò bá tọ̀nà). `oidcDisablePasswordLogin` ń dènà _wíwọlé_ ọ̀rọ̀ aṣínà (`POST /api/auth/login`) ṣùgbọ́n ó ń pa hash ọ̀rọ̀ aṣínà tí a tọ́jú mọ́, re-auth sì ṣì ń ṣàyẹ̀wò `currentPassword` lòdì sí i.
+- `corsOrigins` àti `bruteForceProtection` tún wà nínú `SECURITY_IMPACTING_SETTINGS_KEYS`: síso ọ̀kan nínú wọn ń mú ààbò wíwọlé dín kù, nítorí náà wọ́n nílò re-auth `currentPassword` kan náà (Security tab ń béèrè rẹ̀) àti JSON import ń yọ wọ́n kúrò.
+- Gbogbo kọ́kọ́rọ́ ìlànà ààbò (àwọn titẹ̀sí `SECURITY_IMPACTING_SETTINGS_KEYS`, gbogbo kọ́kọ́rọ́ `oidc*`, àti ipò ìgbà dashboard) jẹ́ **ti operator nìkan** lórí `PATCH /api/settings`: kọ́kọ́rọ́ API tí ó ní ìwọ̀n manage tàbí `oma_` access token ni a kọ̀ pẹ̀lú `403` pàápàá tí wọ́n bá fi `currentPassword` tó tọ̀nà ránṣẹ́, a sì ń ṣe àkọsílẹ̀ kíkọ̀ náà gẹ́gẹ́ bí `settings.update_failed` pẹ̀lú `reason: OPERATOR_REQUIRED` (`requireOperatorCredential()` nínú `src/lib/api/operatorCredential.ts`). Àwọn ètò déédéé (àwọ̀ àkòrí, àyànfẹ́ ìfihàn) ṣì wà fún kíkọ fún kọ́kọ́rọ́ `manage` tàbí `admin` access token. Gbogbo iyipada ti `/api/settings` fúnra rẹ̀ (àti ti `/api/settings/require-login`) tún nílò ìwọ̀n `admin` access-token (`ADMIN_MUTATION_EXACT_PATHS` nínú `src/server/authz/accessScopes.ts`, ìbámu ọ̀nà pípé). `GET` wà `read`, àwọn ọ̀nà-kékeré `/api/settings/*` yòókù (proxies, combo defaults, model aliases, compression, purges…) ń pa ìwọ̀n `write` tí a mọ̀ láti ọ̀nà ìbéèrè mọ́.
+- `POST /api/settings/import-json` ń fo re-auth yẹn, nítorí náà ó ń yọ gbogbo kọ́kọ́rọ́ nínú `IMPORT_STRIPPED_SETTINGS_KEYS` (faili kan náà) kí ó tó kọ: ọ̀rọ̀ aṣínà àti `currentPassword`, gbogbo titẹ̀sí `SECURITY_IMPACTING_SETTINGS_KEYS`, àti ipò ìgbà dashboard (`sessionsValidAfter`, `revokedDashboardSessions`). Nítorí náà, gbígbé afẹ́yìntì àtijọ́ wọlé kò lè jí ìgbà kan tí iyipada ọ̀rọ̀ aṣínà tàbí jíjáde ti parí dìde.
 
-## Àwọn Kíláàsì Route
+## Àwọn Ẹ̀ka Route
 
-`src/server/authz/types.ts` ṣàlàyé kíláàsì mẹ́ta; route èyíkéyìí tí a kò bá lè pín sí kíláàsì kan ní ọ̀nà tó dájú yóò padà sí `MANAGEMENT`.
+`src/server/authz/types.ts` ṣàlàyé ẹ̀ka mẹ́ta; route kan tí a kò lè pín ní ìdánilójú ń padà sí `MANAGEMENT`.
 
-| Kíláàsì      | Àpèjúwe                                                                                                                                                        | Ìfàṣẹsí tí a nílò                                                     |
-| ------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
-| `PUBLIC`     | Àwọn route tí a ti fìdí rẹ̀ múlẹ̀ pé wọ́n ní ààbò — ìwọlé, ìjáde, ipò, ìbẹ̀rẹ̀, àyẹ̀wò ìlera, àti ìmúrasílẹ̀ onboarding.                                              | Kò sí                                                                 |
-| `CLIENT_API` | Àwọn endpoint fún pípèsè model — `/api/v1/*`, `/api/v1beta/*`, pẹ̀lú àwọn alias `/v1/*`, `/v1beta/*`, `/chat/completions`, `/responses`, `/models`, `/codex/*`. | Kọ́kọ́rọ́ Bearer nígbà tí àmì ẹ̀yà `REQUIRE_API_KEY` tó ń ṣiṣẹ́ bá ti ṣiṣẹ́ |
-| `MANAGEMENT` | Àwọn ojú-ewé dashboard, ètò, providers, kọ́kọ́rọ́, admin àti àwọn endpoint àyẹ̀wò ìṣòro.                                                                           | Session dashboard TÀBÍ Bearer tó ní scope `manage`                    |
+| Ẹ̀ka          | Àpèjúwe                                                                                                                                                        | Ìjẹ́rìí tí a nílò                                                        |
+| ------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| `PUBLIC`     | Àwọn route tí ó ṣe kedere ní ààbò: wíwọlé, jíjáde, ipò, init, health, onboarding bootstrap.                                                                    | Kò sí                                                                   |
+| `CLIENT_API` | Àwọn endpoint ìsìn àwòṣe: `/api/v1/*`, `/api/v1beta/*`, pẹ̀lú àwọn orúkọ àpọ́nlé `/v1/*`, `/v1beta/*`, `/chat/completions`, `/responses`, `/models`, `/codex/*`. | Bearer key nígbà tí feature flag `REQUIRE_API_KEY` tó ń ṣiṣẹ́ bá ti ṣiṣẹ́ |
+| `MANAGEMENT` | Àwọn ojú-ìwé dashboard, àwọn ètò, àwọn olùpèsè, àwọn kọ́kọ́rọ́, àwọn endpoint admin àti ìwádìí.                                                                   | Ìgbà dashboard TÀBÍ Bearer tí ó ní ìwọ̀n `manage`                        |
 
-Díẹ̀ lára àwọn ìṣe `MANAGEMENT` jẹ́ **fún operator nìkan**: kọ́kọ́rọ́ `manage` kò tó. Gbigbé àwọn
-ìjẹ́rìísí tí a ti tọ́jú jáde (`GET /api/settings/export-json`, `GET /api/db-backups/export`,
-`GET /api/db-backups/exportAll`), mímú backup padà sórí data tó ń ṣiṣẹ́
-(`POST /api/db-backups/import` tó fi `dryRun=true` sínú, `POST /api/db-backups` láti mú padà nípa id,
-`POST /api/settings/import-json`), pípa àwọn ibi ìmúpadàbọ̀sípò run (`DELETE /api/db-backups` fún ìwẹ̀nùmọ́,
-àti `PATCH /api/db-backups` nítorí pé retention tí ó tọ́jú ló ń darí píparẹ́ aládàáṣiṣẹ́ lẹ́yìn
-backup kọ̀ọ̀kan), fífi token ìmúdọ́gba jáde (`POST /api/sync/tokens`) àti ṣíṣe token ìwọlé CLI
-`admin` (`POST /api/cli/tokens`) nílò session dashboard, subject CLI abẹ́lẹ̀, tàbí kí ìwọlé
-jẹ́ dídálẹ́kun; àwọn kọ́kọ́rọ́ API ti scope èyíkéyìí àti àwọn token ìwọlé `oma_` yóò gba `403`. Àyẹ̀wò náà
-wà nínú `src/lib/api/operatorCredential.ts` (`resolveOperatorCredential()` /
-`requireOperatorCredential()`). Yíyí àwọn ètò ìwọlé padà jẹ́ fún operator nìkan pẹ̀lú:
-`POST /api/settings/require-login` (ṣíṣètò ọ̀rọ̀ aṣínà iṣakoso / yíyí `requireLogin` padà) gba
-àwọn ìjẹ́rìísí wọ̀nyẹn nìkan lẹ́yìn tí ọ̀rọ̀ aṣínà bá ti wà — àyè ìmúrasílẹ̀ ìgbà àkọ́kọ́ (nígbà tí
-ọ̀rọ̀ aṣínà kò tíì sí) kò yí padà — session dashboard sì gbọ́dọ̀ fi `currentPassword` ránṣẹ́ láti
-rọ́pò ọ̀rọ̀ aṣínà (`403` nígbà tí kò bá sí tàbí tí kò tọ́, tí a ó sì ṣàkọsílẹ̀ rẹ̀ gẹ́gẹ́ bí
-`settings.update_failed`). CLI abẹ́lẹ̀ àti instance kan tí ìwọlé rẹ̀ jẹ́ dídálẹ́kun ṣì ní ọ̀nà
-ìmúpadàbọ̀sípò, wọ́n sì lè ṣètò ọ̀rọ̀ aṣínà láìsí i, nítorí pé àwọn méjèèjì ni a so mọ́ host tó ni
-àkójọpọ̀ data náà.
+Àwọn ìgbésẹ̀ `MANAGEMENT` kan jẹ́ **ti operator nìkan**: kọ́kọ́rọ́ `manage` kò tó. Kíkó àwọn credential tí a tọ́jú jáde (`GET /api/settings/export-json`, `GET /api/db-backups/export`, `GET /api/db-backups/exportAll`), dída afẹ́yìntì padà sórí data ààyè (`POST /api/db-backups/import` pẹ̀lú `dryRun=true`, `POST /api/db-backups` restore nípa id, `POST /api/settings/import-json`), àti pípa àwọn ibi ìpadàbọ̀ rẹ́ (`DELETE /api/db-backups` cleanup, àti `PATCH /api/db-backups` nítorí pé retention tí ó ń tọ́jú ni ó ń wa pruning aládàáṣe lẹ́yìn gbogbo backup) nílò ìgbà dashboard, olùmọ̀ CLI ti agbègbè, tàbí wíwọlé tí a ti pa. Fífúnni ní sync token (`POST /api/sync/tokens`) àti ṣíṣe `admin` CLI access token (`POST /api/cli/tokens`) nílò ìgbà dashboard tàbí olùmọ̀ CLI ti agbègbè ní gbogbo ipò wíwọlé. Àwọn kọ́kọ́rọ́ API ti ìwọ̀n èyíkéyìí àti àwọn `oma_` access token kì í ṣe àwọn credential operator: wọ́n máa gba `403` nígbàkígbà tí a bá nílò ọ̀kan. Àyẹ̀wò yìí wà nínú `src/lib/api/operatorCredential.ts` (`resolveOperatorCredential()` / `requireOperatorCredential()`). Yíyí àwọn ètò wíwọlé padà pẹ̀lú jẹ́ ti operator nìkan: `POST /api/settings/require-login` (ṣètò ọ̀rọ̀ aṣínà ìṣàkóso / yí `requireLogin` padà) ń gba àwọn credential wọ̀nyí nìkan nígbà tí ọ̀rọ̀ aṣínà bá ti wà. Fèrèsé bootstrap ìbẹ̀rẹ̀ (kò sí ọ̀rọ̀ aṣínà síbẹ̀) kò yí padà, ìgbà dashboard sì gbọ́dọ̀ fi `currentPassword` ránṣẹ́ láti rọ́pò ọ̀rọ̀ aṣínà (`403` tí ó bá kù tàbí tí kò tọ̀nà, a sì ń ṣe àkọsílẹ̀ rẹ̀ gẹ́gẹ́ bí `settings.update_failed`). CLI ti agbègbè àti instance tí wíwọlé rẹ̀ jẹ́ alaabọ̀ ń pa ọ̀nà ìmúpadàbọ̀sípò mọ́, wọ́n sì lè ṣètò ọ̀rọ̀ aṣínà láìsí i, nítorí méjèèjì ni a so mọ́ host tí ó ni data directory.
 
 ## Ìṣàn Iṣẹ́
 
@@ -281,15 +211,15 @@ bá ti yanjú àwọn àyè láti ìwífún ìfọwọ́sí MCP, metadata ìbé�
 `read` / `write` / `admin` lórí àwọn àmì `oma_live_…`, tí a tò lẹ́sẹẹsẹ nípasẹ̀ `scopeSatisfies`
 (`src/lib/accessTokens/scopes.ts`). Ìpele yìí kan ìwé-ẹ̀rí àmì ìwọlé nìkan. Wo [Ìfọwọ́sí Ìṣàkóso](../guides/MANAGEMENT-AUTH.md).
 
-## Bọ́tìnì Ìbéèrè Ìfàṣẹsí
+## Ìyípadà Ìjẹ́rìí Tí A Nílò
 
-`isAuthRequired()` nínú `src/shared/utils/apiAuth.ts` ló ń pinnu bóyá a ó fi **ìfàṣẹsí èyíkéyìí** múlẹ̀ fún ìbéèrè kan:
+`isAuthRequired()` nínú `src/shared/utils/apiAuth.ts` ló ń pinnu bóyá a óò fi **ìjẹ́rìí** kankan lélẹ̀ fún ìbéèrè kan:
 
-- `settings.requireLogin === false` → ìfàṣẹsí jẹ́ pípa patapata káàkiri ètò.
-- Kò sí ọ̀rọ̀ aṣínà tí a ṣètò **àti pé** kò sí env var `INITIAL_PASSWORD` → ipò ìbẹ̀rẹ̀ ń gba olùrànlọ́wọ́ onboarding àti àwọn ìbéèrè loopback láyè, ṣùgbọ́n àwọn ìbéèrè nẹ́tíwọ́ọ̀kì tí a ṣí síta ṣì nílò ẹ̀rí ìdánimọ̀.
-- Àṣìṣe DB èyíkéyìí → ó máa ń kọ̀ láìgba wọlé (ààbò-gẹ́gẹ́-bí-àiyípẹ̀).
+- `settings.requireLogin === false` → ìjẹ́rìí ti di pípa lápapọ̀, àfi ipele ààbò tí ó máa wà nígbà gbogbo (wo [Route Guard Tiers](../security/ROUTE_GUARD_TIERS.md)) àti àwọn ìpè tí ń fúnni ní credential tí ó gbà, tí ó nílò credential kan náà bí wíwọlé ṣe wà ní títàn: fífúnni ní sync token, ṣíṣe CLI access token ní ìwọ̀n èyíkéyìí, àti dídá kọ́kọ́rọ́ API tí ó ní ìwọ̀n `manage`/`admin`, fífún kọ́kọ́rọ́ ní ìwọ̀n yẹn, tàbí tún ṣe tàbí fihàn irú kọ́kọ́rọ́ bẹ́ẹ̀ (`requireCredentialForManagementScopedKey()` nínú `src/lib/api/requireManagementAuth.ts`). Àwọn kọ́kọ́rọ́ inference nìkan ló wà ní sísílẹ̀.
+- Kò sí ọ̀rọ̀ aṣínà tí a ṣètò **àti** kò sí env var `INITIAL_PASSWORD` → ipò bootstrap: ó gba onboarding wizard àti àwọn ìbéèrè loopback láàyè, ṣùgbọ́n àwọn ìbéèrè nẹ́tíwọ́kì tí a ṣí payá ṣì nílò credential.
+- Àṣìṣe DB èyíkéyìí → ó kùnà ní títì (secure-by-default).
 
-Ìmúlò kọ́kọ́rọ́ API oníbàárà ń lo `isRequireApiKeyEnabled()` nínú `src/shared/utils/featureFlags.ts`, kì í ṣe kíkà `process.env.REQUIRE_API_KEY` ní tààrà. Èyí ṣe pàtàkì fún àwọn instance tí a ti ṣe àgbékalẹ̀ wọn: yíyí `REQUIRE_API_KEY` padà nínú Dashboard → Feature Flags ń tọ́jú override DB kan, ó sì ń ní ipa lẹ́sẹ̀kẹsẹ̀ lórí `/v1/*`, `/v1beta/*`, `/models`, `/responses`, `/chat/completions`, `/codex/*`, àti àwọn àyẹ̀wò ìfàṣẹsí API oníbàárà mìíràn tí wọ́n ń lo olùrànlọ́wọ́ yìí papọ̀. Tí a kò bá lè ka ibi ìtọ́jú feature flag náà, ìfàṣẹsí API oníbàárà máa ń kọ̀ láìgba wọlé, yóò sì béèrè kọ́kọ́rọ́ kan.
+Ìfipágbára API key ti oníbàárà ń lo `isRequireApiKeyEnabled()` nínú `src/shared/utils/featureFlags.ts`, kì í ṣe kíka `process.env.REQUIRE_API_KEY` tààrà. Èyí ṣe pàtàkì fún àwọn instance tí a fi ránṣẹ́: yíyí `REQUIRE_API_KEY` padà nínú Dashboard → Feature Flags ń tọ́jú DB override, ó sì ń nípa lórí `/v1/*`, `/v1beta/*`, `/models`, `/responses`, `/chat/completions`, `/codex/*`, àti àwọn àyẹ̀wò ìjẹ́rìí client-API mìíràn tí ó ń pín olùrànlọ́wọ́ yìí lẹsẹkẹsẹ. Tí a kò bá lè ka feature flag store, ìjẹ́rìí client API ń kùnà ní títì, ó sì nílò kọ́kọ́rọ́.
 
 ## Àyípadà Tó Fọ́ Ìbámu — v3.8.0
 
