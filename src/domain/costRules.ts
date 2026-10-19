@@ -277,17 +277,17 @@ function clearUnpricedPeriodStart(apiKeyId: string) {
 function getBudgetRefusalReason(
   apiKeyId: string,
   budget: NormalizedBudgetConfig,
-  periodStartAt: number,
-  projectedTotal: number,
-  activeLimitUsd: number
+  window: BudgetWindow,
+  projectedTotal: number
 ): string | null {
+  const activeLimitUsd = getActiveBudgetLimit(budget);
   if (activeLimitUsd <= 0) return null;
   const interval = `${budget.resetInterval[0].toUpperCase()}${budget.resetInterval.slice(1)}`;
   if (projectedTotal > activeLimitUsd) {
     return `${interval} budget exceeded: $${projectedTotal.toFixed(4)} / $${activeLimitUsd.toFixed(2)}`;
   }
   if (
-    getUnpricedPeriodStart(apiKeyId) === periodStartAt &&
+    getUnpricedPeriodStart(apiKeyId) === window.periodStartAt &&
     !isFeatureFlagEnabled("USAGE_LIMIT_IGNORE_UNPRICED")
   ) {
     return `${interval} budget cannot be enforced: a model without a price was used this period`;
@@ -643,13 +643,7 @@ export function checkBudget(apiKeyId: string, additionalCost = 0) {
     }
   }
 
-  const refusalReason = getBudgetRefusalReason(
-    apiKeyId,
-    budget,
-    window.periodStartAt,
-    projectedTotal,
-    activeLimitUsd
-  );
+  const refusalReason = getBudgetRefusalReason(apiKeyId, budget, window, projectedTotal);
   if (refusalReason) {
     return {
       allowed: false,
