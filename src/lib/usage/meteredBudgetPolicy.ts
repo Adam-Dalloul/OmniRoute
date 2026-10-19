@@ -80,7 +80,7 @@ export function meteredBudgetCost(
  */
 export function isUnpricedMeteredCost(
   providerId: string | null | undefined,
-  cost: Pick<CostCalculationResult, "priced"> | null | undefined
+  cost: CostCalculationResult | null | undefined
 ): boolean {
   return cost?.priced === false && consumesMeteredBudget(providerId);
 }
