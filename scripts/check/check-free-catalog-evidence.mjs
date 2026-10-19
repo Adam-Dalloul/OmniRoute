@@ -32,7 +32,7 @@ function main() {
   const args = process.argv.slice(2);
   if (args.length && (args.length !== 2 || args[0] !== "--base-ref" || !args[1]))
     throw new Error("Usage: --base-ref <commit>");
-  const suppliedBase = args[1] || process.env.CATALOG_BASE_SHA || process.env.PR_BASE_SHA;
+  const suppliedBase = args[1] || process.env.BASE_SHA;
   if (
     ["pull_request", "merge_group", "push"].includes(process.env.GITHUB_EVENT_NAME) &&
     !suppliedBase

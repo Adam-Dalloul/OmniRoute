@@ -221,8 +221,7 @@ test("CLI refuses unavailable baseline and missing PR base; neither is a success
     env: {
       ...process.env,
       GITHUB_EVENT_NAME: "pull_request",
-      PR_BASE_SHA: "",
-      CATALOG_BASE_SHA: "",
+      BASE_SHA: "",
     },
   });
   assert.equal(missing.status, 1);
@@ -237,7 +236,7 @@ test("CLI requires an event baseline for PR, merge-group and push checks", () =>
     const result = spawnSync(process.execPath, [script], {
       cwd: new URL("../../../", import.meta.url),
       encoding: "utf8",
-      env: { ...process.env, GITHUB_EVENT_NAME: event, PR_BASE_SHA: "", CATALOG_BASE_SHA: "" },
+      env: { ...process.env, GITHUB_EVENT_NAME: event, BASE_SHA: "" },
     });
     assert.equal(result.status, 1, event);
   }
@@ -290,8 +289,7 @@ test("CLI compares candidate debt to the event baseline, including merge queues 
           env: {
             ...process.env,
             GITHUB_EVENT_NAME: event,
-            PR_BASE_SHA: "",
-            CATALOG_BASE_SHA: base,
+            BASE_SHA: base,
           },
         });
       const rejected = run(audited);
