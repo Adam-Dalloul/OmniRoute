@@ -25,9 +25,9 @@
 
 > **使用您自己的提供者帳戶。** 這是針對各自符合資格的第三方免費方案所做的彙總估算，並非 OmniRoute 提供的 Token 額度。請註冊帳戶、在需要時取得憑證，並連接您可使用的提供者；每個提供者都自行管理其限制、可用性與條款。
 >
-> 手動疊加免費方案非常麻煩——數十個 SDK、數十種速率限制，而且根本不知道自己實際擁有多少額度。OmniRoute 收錄了 **34 個週期性共享池鍵中的 478 個免費方案項目**，並根據**具有已公布正值每月預算的 17 個共享池，以及五個 Groq 單模型上限**計算標題中的 Token 數量，同時依共享池進行去重。只有通過區域身分驗證後才能使用的配額（目前為 ModelScope）會另外顯示，約 +6M，需通過區域身分驗證，且絕不計入標題數字。結果會持續顯示於儀表板（`/dashboard/free-tiers`）。
+> 手動疊加免費方案非常麻煩——數十個 SDK、數十種速率限制，而且根本不知道自己實際擁有多少額度。OmniRoute 收錄了 **34 個週期性共享池鍵中的 467 個免費方案項目**，並根據**具有已公布正值每月預算的 17 個共享池，以及五個 Groq 單模型上限**計算標題中的 Token 數量，同時依共享池進行去重。只有通過區域身分驗證後才能使用的配額（目前為 ModelScope）會另外顯示，約 +6M，需通過區域身分驗證，且絕不計入標題數字。結果會持續顯示於儀表板（`/dashboard/free-tiers`）。
 
-<img src="./docs/diagrams/free-tier-budget.svg" width="100%" alt="OmniRoute 免費方案預算卡：穩定提供每月約 1.62B 免費 Token，若加上註冊額度，首月最高約為 2.22B；34 個有文件記錄的週期性共享池鍵涵蓋 478 個已收錄的免費方案項目，並透過單一端點提供。誠實採用共享池去重計算——每個共享池僅計算一次，包括 17 個具有已公布正值每月 Token 預算的週期性共享池，以及五個 Groq 單模型上限；條款風險目錄將 13 個提供者標示為避免使用，讓您自行決定。預算列包含 Mistral 1B、Nara 210M、LLM7 150M、xKiro 150M、Groq 30M（五個單模型上限）與其他較小的共享池；首月註冊額度和永久免費且無 Token 上限的提供者會另外顯示，因此絕不會誇大標題數字。可在 /dashboard/free-tiers 查看即時已用／剩餘額度。"/>
+<img src="./docs/diagrams/free-tier-budget.svg" width="100%" alt="OmniRoute 免費方案預算卡：穩定提供每月約 1.62B 免費 Token，若加上註冊額度，首月最高約為 2.22B；34 個有文件記錄的週期性共享池鍵涵蓋 467 個已收錄的免費方案項目，並透過單一端點提供。誠實採用共享池去重計算——每個共享池僅計算一次，包括 17 個具有已公布正值每月 Token 預算的週期性共享池，以及五個 Groq 單模型上限；條款風險目錄將 13 個提供者標示為避免使用，讓您自行決定。預算列包含 Mistral 1B、Nara 210M、LLM7 150M、xKiro 150M、Groq 30M（五個單模型上限）與其他較小的共享池；首月註冊額度和永久免費且無 Token 上限的提供者會另外顯示，因此絕不會誇大標題數字。可在 /dashboard/free-tiers 查看即時已用／剩餘額度。"/>
 
 > 即時 `/dashboard/free-tiers` 頁面的動畫摘要。完整方法（共享池去重、額度層級、提供者條款）：**[docs/reference/FREE_TIERS.md](docs/reference/FREE_TIERS.md)**。
 >
@@ -1353,7 +1353,7 @@ OMNIROUTE_SKIP_POSTINSTALL=1 npm install -g omniroute   # CI=1 也會略過
   <tr><td nowrap><b><a href="docs/architecture/RESILIENCE_GUIDE.md">韌性指南</a></b></td><td>斷路器、冷卻期、佇列、防止驚群效應、TLS 偽裝</td></tr>
   <tr><td nowrap><b><a href="docs/routing/AUTO-COMBO.md">自動組合引擎</a></b></td><td>16 因子評分、模式套件、自我修復</td></tr>
   <tr><td nowrap><b><a href="docs/ops/PROXY_GUIDE.md">代理伺服器指南</a></b></td><td>3 層代理伺服器系統、1proxy 市集、登錄檔 CRUD</td></tr>
-  <tr><td nowrap><b><a href="docs/reference/FREE_TIERS.md">免費方案</a></b></td><td>整合目錄：34 個有文件記載的週期性資源池／478 個已編目的免費方案項目</td></tr>
+  <tr><td nowrap><b><a href="docs/reference/FREE_TIERS.md">免費方案</a></b></td><td>整合目錄：34 個有文件記載的週期性資源池／467 個已編目的免費方案項目</td></tr>
   <tr><td nowrap><b><a href="docs/guides/FEATURES.md">功能展示</a></b></td><td>附螢幕截圖的視覺化儀表板導覽</td></tr>
   <tr><td nowrap><b><a href="docs/architecture/CODEBASE_DOCUMENTATION.md">程式碼庫文件</a></b></td><td>適合初學者的程式碼庫導覽</td></tr>
 </table>

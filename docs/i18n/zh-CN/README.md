@@ -25,9 +25,9 @@
 
 > **使用你自己的提供者账户。** 这是对各个符合条件的第三方免费层进行汇总后的估算值，并非 OmniRoute 提供的 token 额度。请注册账户，在需要时获取凭据，并连接你可以使用的提供者；每个提供者均自行控制其限额、可用性和条款。
 >
-> 手动叠加免费层非常麻烦——数十个 SDK、数十种速率限制，而且你根本不知道自己实际拥有多少额度。OmniRoute 编目了**分布在 34 个周期性额度池键中的 478 个免费层条目**，并根据**具有已公布正数月度预算的 17 个额度池，以及五个按模型计算的 Groq 上限**得出 token 总量标题，同时按共享额度池去重。只有通过区域身份验证后才能使用的配额（目前为 ModelScope）会单独显示，即区域身份验证后可额外获得约 6M，并且绝不会计入标题总量。计算结果会持续显示在仪表板上（`/dashboard/free-tiers`）。
+> 手动叠加免费层非常麻烦——数十个 SDK、数十种速率限制，而且你根本不知道自己实际拥有多少额度。OmniRoute 编目了**分布在 34 个周期性额度池键中的 467 个免费层条目**，并根据**具有已公布正数月度预算的 17 个额度池，以及五个按模型计算的 Groq 上限**得出 token 总量标题，同时按共享额度池去重。只有通过区域身份验证后才能使用的配额（目前为 ModelScope）会单独显示，即区域身份验证后可额外获得约 6M，并且绝不会计入标题总量。计算结果会持续显示在仪表板上（`/dashboard/free-tiers`）。
 
-<img src="./docs/diagrams/free-tier-budget.svg" width="100%" alt="OmniRoute 免费层预算卡片：每月稳定提供约 1.62B 个免费 token，加上注册赠送额度后，首月最高约为 2.22B；34 个有据可查的周期性额度池键涵盖 478 个已编目的免费层条目，并通过一个端点提供。真实且按额度池去重的计算方式——每个共享额度池仅计算一次，其中包括 17 个具有已公布正数月度 token 预算的周期性额度池，以及五个按模型计算的 Groq 上限；在条款风险目录中，有 13 个提供者被标记为建议避免，由你自行决定。预算条包含 Mistral 1B、Nara 210M、LLM7 150M、xKiro 150M、Groq 30M（五个按模型计算的上限）以及较小的额度池；首月注册赠送额度和永久免费的无 token 上限提供者会单独显示，因此绝不会虚增标题总量。可在 /dashboard/free-tiers 查看实时已用/剩余额度。"/>
+<img src="./docs/diagrams/free-tier-budget.svg" width="100%" alt="OmniRoute 免费层预算卡片：每月稳定提供约 1.62B 个免费 token，加上注册赠送额度后，首月最高约为 2.22B；34 个有据可查的周期性额度池键涵盖 467 个已编目的免费层条目，并通过一个端点提供。真实且按额度池去重的计算方式——每个共享额度池仅计算一次，其中包括 17 个具有已公布正数月度 token 预算的周期性额度池，以及五个按模型计算的 Groq 上限；在条款风险目录中，有 13 个提供者被标记为建议避免，由你自行决定。预算条包含 Mistral 1B、Nara 210M、LLM7 150M、xKiro 150M、Groq 30M（五个按模型计算的上限）以及较小的额度池；首月注册赠送额度和永久免费的无 token 上限提供者会单独显示，因此绝不会虚增标题总量。可在 /dashboard/free-tiers 查看实时已用/剩余额度。"/>
 
 > 实时 `/dashboard/free-tiers` 页面的动画摘要。完整方法说明（额度池去重、赠送额度层级、提供者条款）：**[docs/reference/FREE_TIERS.md](docs/reference/FREE_TIERS.md)**。
 >
@@ -1353,7 +1353,7 @@ OMNIROUTE_SKIP_POSTINSTALL=1 npm install -g omniroute   # CI=1 也会跳过
   <tr><td nowrap><b><a href="docs/architecture/RESILIENCE_GUIDE.md">韧性指南</a></b></td><td>熔断器、冷却时间、队列、防惊群、TLS 欺骗</td></tr>
   <tr><td nowrap><b><a href="docs/routing/AUTO-COMBO.md">自动组合引擎</a></b></td><td>16 因素评分、模式包、自愈</td></tr>
   <tr><td nowrap><b><a href="docs/ops/PROXY_GUIDE.md">代理指南</a></b></td><td>3 级代理系统、1proxy 市场、注册表 CRUD</td></tr>
-  <tr><td nowrap><b><a href="docs/reference/FREE_TIERS.md">免费套餐</a></b></td><td>汇总目录：34 个已记录的周期性资源池 / 478 个已编目的免费套餐条目</td></tr>
+  <tr><td nowrap><b><a href="docs/reference/FREE_TIERS.md">免费套餐</a></b></td><td>汇总目录：34 个已记录的周期性资源池 / 467 个已编目的免费套餐条目</td></tr>
   <tr><td nowrap><b><a href="docs/guides/FEATURES.md">功能展示</a></b></td><td>通过截图直观浏览仪表板</td></tr>
   <tr><td nowrap><b><a href="docs/architecture/CODEBASE_DOCUMENTATION.md">代码库文档</a></b></td><td>面向初学者的代码库导览</td></tr>
 </table>
