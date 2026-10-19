@@ -12,14 +12,17 @@
 import {
   deleteAllCostData,
   deleteBudget as dbDeleteBudget,
+  deleteBudgetUnpricedPeriodStart,
   deleteCostEntries,
   loadAllBudgets,
   loadBudget,
+  loadBudgetUnpricedPeriodStart,
   loadCostEntries,
   loadCostEntriesInRange,
   loadCostTotal,
   saveBudget,
   saveBudgetResetLog,
+  saveBudgetUnpricedPeriodStart,
 } from "../lib/db/domainState";
 import {
   discardSpendBatchEntries,
@@ -27,6 +30,7 @@ import {
   spendBatchWriter,
 } from "@/lib/spend/batchWriter";
 import { recordLedgerFromCost } from "@/lib/usage/costLedgerRecorder";
+import { isFeatureFlagEnabled } from "@/shared/utils/featureFlags";
 
 export type BudgetResetInterval = "daily" | "weekly" | "monthly";
 
@@ -97,6 +101,9 @@ const RESET_TIME_REGEX = /^(\d{2}):(\d{2})$/;
 
 /** @type {Map<string, NormalizedBudgetConfig>} In-memory cache for budgets */
 const budgets = new Map<string, NormalizedBudgetConfig>();
+
+/** In-memory cache of each key's unpriced-usage period (see {@link recordUnpricedBudgetUsage}). */
+const unpricedPeriodStarts = new Map<string, number | null>();
 
 function toNumber(value: unknown, fallback = 0): number {
   if (typeof value === "number" && Number.isFinite(value)) return value;
@@ -237,6 +244,57 @@ function getActiveBudgetLimit(budget: NormalizedBudgetConfig): number {
   return budget.dailyLimitUsd;
 }
 
+/** Start of the period in which this key's budget recorded unpriced usage, or null. */
+function getUnpricedPeriodStart(apiKeyId: string): number | null {
+  const cached = unpricedPeriodStarts.get(apiKeyId);
+  if (cached !== undefined) return cached;
+  try {
+    const stored = loadBudgetUnpricedPeriodStart(apiKeyId);
+    unpricedPeriodStarts.set(apiKeyId, stored);
+    return stored;
+  } catch {
+    // DB may not be ready.
+    return null;
+  }
+}
+
+function clearUnpricedPeriodStart(apiKeyId: string) {
+  unpricedPeriodStarts.set(apiKeyId, null);
+  try {
+    deleteBudgetUnpricedPeriodStart(apiKeyId);
+  } catch {
+    // Non-critical.
+  }
+}
+
+/**
+ * Why the budget refuses more metered spend in this period, or null. Spend over
+ * the limit comes first. Otherwise a period that used a metered model with no
+ * price fails closed: its total is undercounted and cannot be trusted against a
+ * hard cap — the policy the per-key usage limit applies (#12341) — unless
+ * USAGE_LIMIT_IGNORE_UNPRICED counts that usage as $0.
+ */
+function getBudgetRefusalReason(
+  apiKeyId: string,
+  budget: NormalizedBudgetConfig,
+  periodStartAt: number,
+  projectedTotal: number,
+  activeLimitUsd: number
+): string | null {
+  if (activeLimitUsd <= 0) return null;
+  const interval = `${budget.resetInterval[0].toUpperCase()}${budget.resetInterval.slice(1)}`;
+  if (projectedTotal > activeLimitUsd) {
+    return `${interval} budget exceeded: $${projectedTotal.toFixed(4)} / $${activeLimitUsd.toFixed(2)}`;
+  }
+  if (
+    getUnpricedPeriodStart(apiKeyId) === periodStartAt &&
+    !isFeatureFlagEnabled("USAGE_LIMIT_IGNORE_UNPRICED")
+  ) {
+    return `${interval} budget cannot be enforced: a model without a price was used this period`;
+  }
+  return null;
+}
+
 function getBudgetWindowTotal(apiKeyId: string, periodStartAt: number): number {
   try {
     return (
@@ -348,6 +406,9 @@ function syncBudgetSchedule(
  * @param {BudgetConfig} config
  */
 export function setBudget(apiKeyId: string, config: BudgetConfig) {
+  // Saving the budget is an operator decision about it: like the warning state,
+  // a period closed by unpriced usage starts over.
+  clearUnpricedPeriodStart(apiKeyId);
   return syncBudgetSchedule(apiKeyId, config, Date.now(), { logReset: false, persist: true });
 }
 
@@ -382,6 +443,7 @@ export function getBudget(apiKeyId: string): NormalizedBudgetConfig | null {
  */
 export function deleteBudget(apiKeyId: string) {
   budgets.delete(apiKeyId);
+  unpricedPeriodStarts.delete(apiKeyId);
   discardSpendBatchEntries(apiKeyId);
   try {
     dbDeleteBudget(apiKeyId);
@@ -460,16 +522,47 @@ export function buildCostCtx(
  * Record a chat-path cost when there is a real amount to log — the shared
  * `apiKeyInfo?.id && estimatedCost > 0` guard used at both chatCore.ts
  * `recordCost` call sites. `context` (see {@link buildCostCtx}) is
- * built once by the caller; only `success` varies per call site.
+ * built once by the caller; only `success` varies per call site. `unpriced`
+ * marks a metered call whose $0 has no price behind it, which closes the
+ * budget period instead of being dropped (see {@link recordUnpricedBudgetUsage}).
  */
 export function recordChatCallCost(
   apiKeyInfo: { id?: string | null } | null | undefined,
   estimatedCost: number,
   context: RecordCostDetails,
-  success: boolean
+  success: boolean,
+  unpriced = false
 ): void {
-  if (!apiKeyInfo?.id || estimatedCost <= 0) return;
+  if (!apiKeyInfo?.id) return;
+  if (unpriced) recordUnpricedBudgetUsage(apiKeyInfo.id, context);
+  if (estimatedCost <= 0) return;
   recordCost(apiKeyInfo.id, estimatedCost, { ...context, success });
+}
+
+/**
+ * Record that a completed call used a metered model whose cost could not be
+ * priced (no pricing row and no provider-reported cost). That $0 is not free
+ * usage, so the key's budget fails closed for the rest of the current period —
+ * see {@link checkBudget}. Saving the budget again reopens it; a key with no
+ * budget, or a zero (no-limit) budget, is unaffected.
+ */
+export function recordUnpricedBudgetUsage(
+  apiKeyId: string,
+  details: Pick<RecordCostDetails, "provider" | "model"> = {}
+): void {
+  const budget = getBudget(apiKeyId);
+  if (!budget || getActiveBudgetLimit(budget) <= 0) return;
+  const window = getBudgetWindow(budget.resetInterval, budget.resetTime);
+  if (getUnpricedPeriodStart(apiKeyId) === window.periodStartAt) return;
+  unpricedPeriodStarts.set(apiKeyId, window.periodStartAt);
+  try {
+    saveBudgetUnpricedPeriodStart(apiKeyId, window.periodStartAt);
+  } catch {
+    // Non-critical: the in-memory cache still enforces it.
+  }
+  console.warn(
+    `[BudgetWarning] ${apiKeyId} used ${details.provider || "?"}/${details.model || "?"}, which has no price — its ${budget.resetInterval} budget fails closed until ${new Date(window.nextResetAt).toISOString()} unless USAGE_LIMIT_IGNORE_UNPRICED is on (#12341)`
+  );
 }
 
 /**
@@ -550,10 +643,17 @@ export function checkBudget(apiKeyId: string, additionalCost = 0) {
     }
   }
 
-  if (activeLimitUsd > 0 && projectedTotal > activeLimitUsd) {
+  const refusalReason = getBudgetRefusalReason(
+    apiKeyId,
+    budget,
+    window.periodStartAt,
+    projectedTotal,
+    activeLimitUsd
+  );
+  if (refusalReason) {
     return {
       allowed: false,
-      reason: `${budget.resetInterval[0].toUpperCase()}${budget.resetInterval.slice(1)} budget exceeded: $${projectedTotal.toFixed(4)} / $${activeLimitUsd.toFixed(2)}`,
+      reason: refusalReason,
       dailyUsed: periodUsed,
       dailyLimit: activeLimitUsd,
       warningReached: true,
@@ -690,10 +790,19 @@ export function getCostSummary(apiKeyId: string): BudgetSummary {
  */
 export function resetCostData() {
   budgets.clear();
+  unpricedPeriodStarts.clear();
   resetSpendBatchWriterForTests();
   try {
     deleteAllCostData();
   } catch {
     // Non-critical.
   }
+}
+
+/**
+ * Drop the in-memory budget caches so the next read comes from the DB (for testing).
+ */
+export function clearBudgetCacheForTests() {
+  budgets.clear();
+  unpricedPeriodStarts.clear();
 }
