@@ -119,13 +119,16 @@ test("a key without a budget, or with a zero (no-limit) budget, is not affected"
   assert.equal(costRules.checkBudget(KEY).allowed, true);
 });
 
-test("the closure is stored with the budget period and survives a cold cache", () => {
+test("the closure lives in storage with its budget period, so a restart keeps it", () => {
   giveDailyBudget(1);
   chargeUnpriced();
   const { periodStartAt } = costRules.getBudgetWindow("daily", "00:00");
   assert.equal(domainState.loadBudgetUnpricedPeriodStart(KEY), periodStartAt);
 
-  costRules.clearBudgetCacheForTests();
+  // A closure written by an earlier process is enforced as well.
+  giveDailyBudget(1);
+  assert.equal(costRules.checkBudget(KEY).allowed, true);
+  domainState.saveBudgetUnpricedPeriodStart(KEY, periodStartAt);
   assert.equal(costRules.checkBudget(KEY).allowed, false);
 });
 
@@ -133,7 +136,6 @@ test("a closure left by an earlier period does not block the current one", () =>
   giveDailyBudget(1);
   const { periodStartAt } = costRules.getBudgetWindow("daily", "00:00");
   domainState.saveBudgetUnpricedPeriodStart(KEY, periodStartAt - 24 * 60 * 60 * 1000);
-  costRules.clearBudgetCacheForTests();
   assert.equal(costRules.checkBudget(KEY).allowed, true);
 });
 

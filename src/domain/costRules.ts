@@ -102,9 +102,6 @@ const RESET_TIME_REGEX = /^(\d{2}):(\d{2})$/;
 /** @type {Map<string, NormalizedBudgetConfig>} In-memory cache for budgets */
 const budgets = new Map<string, NormalizedBudgetConfig>();
 
-/** In-memory cache of each key's unpriced-usage period (see {@link recordUnpricedBudgetUsage}). */
-const unpricedPeriodStarts = new Map<string, number | null>();
-
 function toNumber(value: unknown, fallback = 0): number {
   if (typeof value === "number" && Number.isFinite(value)) return value;
   if (typeof value === "string" && value.trim().length > 0) {
@@ -246,12 +243,8 @@ function getActiveBudgetLimit(budget: NormalizedBudgetConfig): number {
 
 /** Start of the period in which this key's budget recorded unpriced usage, or null. */
 function getUnpricedPeriodStart(apiKeyId: string): number | null {
-  const cached = unpricedPeriodStarts.get(apiKeyId);
-  if (cached !== undefined) return cached;
   try {
-    const stored = loadBudgetUnpricedPeriodStart(apiKeyId);
-    unpricedPeriodStarts.set(apiKeyId, stored);
-    return stored;
+    return loadBudgetUnpricedPeriodStart(apiKeyId);
   } catch {
     // DB may not be ready.
     return null;
@@ -259,7 +252,6 @@ function getUnpricedPeriodStart(apiKeyId: string): number | null {
 }
 
 function clearUnpricedPeriodStart(apiKeyId: string) {
-  unpricedPeriodStarts.set(apiKeyId, null);
   try {
     deleteBudgetUnpricedPeriodStart(apiKeyId);
   } catch {
@@ -443,7 +435,6 @@ export function getBudget(apiKeyId: string): NormalizedBudgetConfig | null {
  */
 export function deleteBudget(apiKeyId: string) {
   budgets.delete(apiKeyId);
-  unpricedPeriodStarts.delete(apiKeyId);
   discardSpendBatchEntries(apiKeyId);
   try {
     dbDeleteBudget(apiKeyId);
@@ -554,11 +545,11 @@ export function recordUnpricedBudgetUsage(
   if (!budget || getActiveBudgetLimit(budget) <= 0) return;
   const window = getBudgetWindow(budget.resetInterval, budget.resetTime);
   if (getUnpricedPeriodStart(apiKeyId) === window.periodStartAt) return;
-  unpricedPeriodStarts.set(apiKeyId, window.periodStartAt);
   try {
     saveBudgetUnpricedPeriodStart(apiKeyId, window.periodStartAt);
   } catch {
-    // Non-critical: the in-memory cache still enforces it.
+    // Non-critical, like every other budget write.
+    return;
   }
   console.warn(
     `[BudgetWarning] ${apiKeyId} used ${details.provider || "?"}/${details.model || "?"}, which has no price — its ${budget.resetInterval} budget fails closed until ${new Date(window.nextResetAt).toISOString()} unless USAGE_LIMIT_IGNORE_UNPRICED is on (#12341)`
@@ -784,19 +775,10 @@ export function getCostSummary(apiKeyId: string): BudgetSummary {
  */
 export function resetCostData() {
   budgets.clear();
-  unpricedPeriodStarts.clear();
   resetSpendBatchWriterForTests();
   try {
     deleteAllCostData();
   } catch {
     // Non-critical.
   }
-}
-
-/**
- * Drop the in-memory budget caches so the next read comes from the DB (for testing).
- */
-export function clearBudgetCacheForTests() {
-  budgets.clear();
-  unpricedPeriodStarts.clear();
 }
